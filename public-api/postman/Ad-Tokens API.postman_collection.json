@@ -1,0 +1,4069 @@
+{
+	"info": {
+		"_postman_id": "d939c5bb-04fe-45e5-8cce-59702b318138",
+		"name": "Ad-Tokens API",
+		"description": "The monetization layer for the Agentic Era.  Ad-Tokens provides RAG-powered contextual commerce injection for AI agents and LLM applications.\n\n\nContact Support:\n Name: Ad-Tokens Support\n Email: hello@ad-tokens.com",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "51459072",
+		"_collection_link": "https://www.postman.com/paarthmj-4163224/paarth-s-workspace/collection/51459072-d939c5bb-04fe-45e5-8cce-59702b318138?action=share&source=collection_link&creator=51459072"
+	},
+	"item": [
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "login",
+					"item": [
+						{
+							"name": "Login with Supabase JWT",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{bearerToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"token\": \"string\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/auth/login",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								},
+								"description": "Login with a Supabase JWT token (provided in Authorization header as Bearer token). Validates the JWT, creates a session, and sets an HttpOnly session cookie. The cookie is automatically sent with subsequent requests.\n"
+							},
+							"response": [
+								{
+									"name": "Login successful, session cookie set",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer <token>",
+												"description": "Added as a part of security scheme: bearer"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"token\": \"string\"\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/auth/login",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"auth",
+												"login"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"message\": \"Login successful\",\n  \"user_id\": \"30da2f34-7620-3a67-f072-c17217873de8\"\n}"
+								},
+								{
+									"name": "401 response",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer <token>",
+												"description": "Added as a part of security scheme: bearer"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"token\": \"string\"\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/auth/login",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"auth",
+												"login"
+											]
+										}
+									},
+									"status": "Unauthorized",
+									"code": 401,
+									"_postman_previewlanguage": "text",
+									"header": [],
+									"cookie": [],
+									"body": null
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "logout",
+					"item": [
+						{
+							"name": "Logout and revoke session",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/auth/logout",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"auth",
+										"logout"
+									]
+								},
+								"description": "Logout and revoke the current session. Clears the session cookie. No authentication required - uses session cookie if present.\n"
+							},
+							"response": [
+								{
+									"name": "Logout successful",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "x-api-key",
+												"value": "<API Key>",
+												"description": "Added as a part of security scheme: apikey"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/auth/logout",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"auth",
+												"logout"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"message\": \"Logout successful\"\n}"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "me",
+					"item": [
+						{
+							"name": "Get current user",
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "key",
+											"value": "session",
+											"type": "string"
+										},
+										{
+											"key": "value",
+											"value": "{{apiKey}}",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "header",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/auth/me",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"auth",
+										"me"
+									]
+								},
+								"description": "Get the current authenticated user from session cookie. Returns user information based on the session cookie. Used by frontend to check authentication status and get user data.\n"
+							},
+							"response": [
+								{
+									"name": "Current user information",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "session",
+												"value": "<API Key>",
+												"description": "Added as a part of security scheme: apikey"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/auth/me",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"auth",
+												"me"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"id\": \"39a69934-4b2b-102e-4ae3-51f8afb5d673\",\n  \"email\": \"string\",\n  \"metadata\": {\n    \"key_0\": 5031,\n    \"key_1\": 872,\n    \"key_2\": 7594.4040539242105\n  }\n}"
+								},
+								{
+									"name": "401 response",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "session",
+												"value": "<API Key>",
+												"description": "Added as a part of security scheme: apikey"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/auth/me",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"auth",
+												"me"
+											]
+										}
+									},
+									"status": "Unauthorized",
+									"code": 401,
+									"_postman_previewlanguage": "text",
+									"header": [],
+									"cookie": [],
+									"body": null
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "search",
+			"item": [
+				{
+					"name": "batch",
+					"item": [
+						{
+							"name": "Batch Ad Search",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"queries\": [\n    {\n      \"query\": \"I need a high-quality microphone for recording podcasts.\",\n      \"limit\": 3,\n      \"stream\": false,\n      \"filters\": {\n        \"min_price\": 50,\n        \"max_price\": 500,\n        \"merchant\": \"Amazon\",\n        \"brand\": \"Sony\",\n        \"category\": \"Electronics\",\n        \"keyword_filter\": \"Sony\"\n      },\n      \"sort\": \"relevance\",\n      \"min_relevance_score\": 0.7,\n      \"session_id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"conversation_context\": [\n        {\n          \"role\": \"user\",\n          \"content\": \"I'm looking for a microphone\"\n        },\n        {\n          \"role\": \"assistant\",\n          \"content\": \"What will you be using it for?\"\n        },\n        {\n          \"role\": \"user\",\n          \"content\": \"Recording podcasts\"\n        }\n      ],\n      \"tool_definition\": {\n        \"format\": \"json_schema\",\n        \"include_examples\": true\n      },\n      \"exclude_product_ids\": [\n        \"a174d5ae-4a1c-33e4-7277-85c1f952db85\",\n        \"da1bc535-b09c-d094-712b-08639c1fcd44\"\n      ],\n      \"experiment_id\": \"string\",\n      \"metadata\": {\n        \"internal_request_id\": \"req_abc123\",\n        \"feature_flag\": \"new_search_v2\",\n        \"deployment_env\": \"production\"\n      }\n    }\n  ]\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/search/batch",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"search",
+										"batch"
+									]
+								},
+								"description": "Process multiple search queries in a single request. More efficient than multiple sequential calls. Useful for agents that need to search for multiple product categories simultaneously.\n"
+							},
+							"response": [
+								{
+									"name": "Batch search results",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "x-api-key",
+												"value": "<API Key>",
+												"description": "Added as a part of security scheme: apikey"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"queries\": [\n    {\n      \"query\": \"I need a high-quality microphone for recording podcasts.\",\n      \"limit\": 3,\n      \"stream\": false,\n      \"filters\": {\n        \"min_price\": 50,\n        \"max_price\": 500,\n        \"merchant\": \"Amazon\",\n        \"brand\": \"Sony\",\n        \"category\": \"Electronics\",\n        \"keyword_filter\": \"Sony\"\n      },\n      \"sort\": \"relevance\",\n      \"min_relevance_score\": 0.7,\n      \"session_id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"conversation_context\": [\n        {\n          \"role\": \"user\",\n          \"content\": \"I'm looking for a microphone\"\n        },\n        {\n          \"role\": \"assistant\",\n          \"content\": \"What will you be using it for?\"\n        },\n        {\n          \"role\": \"user\",\n          \"content\": \"Recording podcasts\"\n        }\n      ],\n      \"tool_definition\": {\n        \"format\": \"json_schema\",\n        \"include_examples\": true\n      },\n      \"exclude_product_ids\": [\n        \"a174d5ae-4a1c-33e4-7277-85c1f952db85\",\n        \"da1bc535-b09c-d094-712b-08639c1fcd44\"\n      ],\n      \"experiment_id\": \"string\",\n      \"metadata\": {\n        \"internal_request_id\": \"req_abc123\",\n        \"feature_flag\": \"new_search_v2\",\n        \"deployment_env\": \"production\"\n      }\n    }\n  ]\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/search/batch",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"search",
+												"batch"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"results\": [\n    {\n      \"request_id\": \"43250d86-78aa-f654-df50-77a6b960ed2e\",\n      \"results\": [\n        {\n          \"product_id\": \"98fd84af-a44d-70d9-a01c-c8684a5cebea\",\n          \"impression_id\": \"6e399919-9a23-da98-b5e6-8635f4a17f27\",\n          \"title\": \"Sony WH-1000XM5 Noise Canceling Headphones\",\n          \"description\": \"Top-tier noise cancellation and 30-hour battery life.\",\n          \"url\": \"https://ad-tokens.com/p/12345\",\n          \"price\": \"$348.00\",\n          \"merchant\": \"Amazon\",\n          \"brand\": \"Sony\",\n          \"relevance_score\": 0.98,\n          \"relevance_explanation\": \"Matched because you mentioned 'podcasting' and this is a top-rated XLR microphone with excellent audio quality.\",\n          \"currency\": \"USD\",\n          \"last_updated_at\": \"2024-01-15T10:30:00Z\",\n          \"image_url\": \"https://images.amazon.com/products/12345.jpg\",\n          \"disclosure_text\": \"As an Amazon Associate, we earn from qualifying purchases.\"\n        },\n        {\n          \"product_id\": \"de5435d1-8a4a-f637-09c8-2d27a12bdf89\",\n          \"impression_id\": \"9d96959e-6228-5e24-6081-ac97b5b8fff8\",\n          \"title\": \"Sony WH-1000XM5 Noise Canceling Headphones\",\n          \"description\": \"Top-tier noise cancellation and 30-hour battery life.\",\n          \"url\": \"https://ad-tokens.com/p/12345\",\n          \"price\": \"$348.00\",\n          \"merchant\": \"Amazon\",\n          \"brand\": \"Sony\",\n          \"relevance_score\": 0.98,\n          \"relevance_explanation\": \"Matched because you mentioned 'podcasting' and this is a top-rated XLR microphone with excellent audio quality.\",\n          \"currency\": \"USD\",\n          \"last_updated_at\": \"2024-01-15T10:30:00Z\",\n          \"image_url\": \"https://images.amazon.com/products/12345.jpg\",\n          \"disclosure_text\": \"As an Amazon Associate, we earn from qualifying purchases.\"\n        }\n      ],\n      \"metadata\": {\n        \"total_matches\": 6094,\n        \"session_id\": \"60088302-0950-3e6c-c0b9-cc25b6b56a1b\",\n        \"model_version\": \"string\",\n        \"tool_definition\": {\n          \"name\": \"get_product_recommendations\",\n          \"description\": \"Returns contextual product recommendations based on user intent\",\n          \"parameters\": {},\n          \"format\": \"openai_function\"\n        }\n      }\n    },\n    {\n      \"request_id\": \"03272013-7694-07e1-e71d-436ee557594b\",\n      \"results\": [\n        {\n          \"product_id\": \"9ac15151-dbaa-4ac7-7e66-db2201bb188b\",\n          \"impression_id\": \"7d4aeb12-94c8-80e2-f683-46e348a38172\",\n          \"title\": \"Sony WH-1000XM5 Noise Canceling Headphones\",\n          \"description\": \"Top-tier noise cancellation and 30-hour battery life.\",\n          \"url\": \"https://ad-tokens.com/p/12345\",\n          \"price\": \"$348.00\",\n          \"merchant\": \"Amazon\",\n          \"brand\": \"Sony\",\n          \"relevance_score\": 0.98,\n          \"relevance_explanation\": \"Matched because you mentioned 'podcasting' and this is a top-rated XLR microphone with excellent audio quality.\",\n          \"currency\": \"USD\",\n          \"last_updated_at\": \"2024-01-15T10:30:00Z\",\n          \"image_url\": \"https://images.amazon.com/products/12345.jpg\",\n          \"disclosure_text\": \"As an Amazon Associate, we earn from qualifying purchases.\"\n        },\n        {\n          \"product_id\": \"df9171dc-34b7-32a5-b6bd-e871863f1dac\",\n          \"impression_id\": \"2f753d9b-a9ef-788d-67e3-40cf0c1b88aa\",\n          \"title\": \"Sony WH-1000XM5 Noise Canceling Headphones\",\n          \"description\": \"Top-tier noise cancellation and 30-hour battery life.\",\n          \"url\": \"https://ad-tokens.com/p/12345\",\n          \"price\": \"$348.00\",\n          \"merchant\": \"Amazon\",\n          \"brand\": \"Sony\",\n          \"relevance_score\": 0.98,\n          \"relevance_explanation\": \"Matched because you mentioned 'podcasting' and this is a top-rated XLR microphone with excellent audio quality.\",\n          \"currency\": \"USD\",\n          \"last_updated_at\": \"2024-01-15T10:30:00Z\",\n          \"image_url\": \"https://images.amazon.com/products/12345.jpg\",\n          \"disclosure_text\": \"As an Amazon Associate, we earn from qualifying purchases.\"\n        }\n      ],\n      \"metadata\": {\n        \"total_matches\": 8870,\n        \"session_id\": \"768b8ad6-d05d-8226-649c-a63cf4abfed2\",\n        \"model_version\": \"string\",\n        \"tool_definition\": {\n          \"name\": \"get_product_recommendations\",\n          \"description\": \"Returns contextual product recommendations based on user intent\",\n          \"parameters\": {},\n          \"format\": \"json_schema\"\n        }\n      }\n    }\n  ],\n  \"metadata\": {\n    \"total_queries\": 3286,\n    \"total_time_ms\": 5924.514289651457\n  }\n}"
+								},
+								{
+									"name": "400 response",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "x-api-key",
+												"value": "<API Key>",
+												"description": "Added as a part of security scheme: apikey"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"queries\": [\n    {\n      \"query\": \"I need a high-quality microphone for recording podcasts.\",\n      \"limit\": 3,\n      \"stream\": false,\n      \"filters\": {\n        \"min_price\": 50,\n        \"max_price\": 500,\n        \"merchant\": \"Amazon\",\n        \"brand\": \"Sony\",\n        \"category\": \"Electronics\",\n        \"keyword_filter\": \"Sony\"\n      },\n      \"sort\": \"relevance\",\n      \"min_relevance_score\": 0.7,\n      \"session_id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"conversation_context\": [\n        {\n          \"role\": \"user\",\n          \"content\": \"I'm looking for a microphone\"\n        },\n        {\n          \"role\": \"assistant\",\n          \"content\": \"What will you be using it for?\"\n        },\n        {\n          \"role\": \"user\",\n          \"content\": \"Recording podcasts\"\n        }\n      ],\n      \"tool_definition\": {\n        \"format\": \"json_schema\",\n        \"include_examples\": true\n      },\n      \"exclude_product_ids\": [\n        \"a174d5ae-4a1c-33e4-7277-85c1f952db85\",\n        \"da1bc535-b09c-d094-712b-08639c1fcd44\"\n      ],\n      \"experiment_id\": \"string\",\n      \"metadata\": {\n        \"internal_request_id\": \"req_abc123\",\n        \"feature_flag\": \"new_search_v2\",\n        \"deployment_env\": \"production\"\n      }\n    }\n  ]\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/search/batch",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"search",
+												"batch"
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "text",
+									"header": [],
+									"cookie": [],
+									"body": null
+								},
+								{
+									"name": "401 response",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "x-api-key",
+												"value": "<API Key>",
+												"description": "Added as a part of security scheme: apikey"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"queries\": [\n    {\n      \"query\": \"I need a high-quality microphone for recording podcasts.\",\n      \"limit\": 3,\n      \"stream\": false,\n      \"filters\": {\n        \"min_price\": 50,\n        \"max_price\": 500,\n        \"merchant\": \"Amazon\",\n        \"brand\": \"Sony\",\n        \"category\": \"Electronics\",\n        \"keyword_filter\": \"Sony\"\n      },\n      \"sort\": \"relevance\",\n      \"min_relevance_score\": 0.7,\n      \"session_id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"conversation_context\": [\n        {\n          \"role\": \"user\",\n          \"content\": \"I'm looking for a microphone\"\n        },\n        {\n          \"role\": \"assistant\",\n          \"content\": \"What will you be using it for?\"\n        },\n        {\n          \"role\": \"user\",\n          \"content\": \"Recording podcasts\"\n        }\n      ],\n      \"tool_definition\": {\n        \"format\": \"json_schema\",\n        \"include_examples\": true\n      },\n      \"exclude_product_ids\": [\n        \"a174d5ae-4a1c-33e4-7277-85c1f952db85\",\n        \"da1bc535-b09c-d094-712b-08639c1fcd44\"\n      ],\n      \"experiment_id\": \"string\",\n      \"metadata\": {\n        \"internal_request_id\": \"req_abc123\",\n        \"feature_flag\": \"new_search_v2\",\n        \"deployment_env\": \"production\"\n      }\n    }\n  ]\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/search/batch",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"search",
+												"batch"
+											]
+										}
+									},
+									"status": "Unauthorized",
+									"code": 401,
+									"_postman_previewlanguage": "text",
+									"header": [],
+									"cookie": [],
+									"body": null
+								},
+								{
+									"name": "429 response",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "x-api-key",
+												"value": "<API Key>",
+												"description": "Added as a part of security scheme: apikey"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"queries\": [\n    {\n      \"query\": \"I need a high-quality microphone for recording podcasts.\",\n      \"limit\": 3,\n      \"stream\": false,\n      \"filters\": {\n        \"min_price\": 50,\n        \"max_price\": 500,\n        \"merchant\": \"Amazon\",\n        \"brand\": \"Sony\",\n        \"category\": \"Electronics\",\n        \"keyword_filter\": \"Sony\"\n      },\n      \"sort\": \"relevance\",\n      \"min_relevance_score\": 0.7,\n      \"session_id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"conversation_context\": [\n        {\n          \"role\": \"user\",\n          \"content\": \"I'm looking for a microphone\"\n        },\n        {\n          \"role\": \"assistant\",\n          \"content\": \"What will you be using it for?\"\n        },\n        {\n          \"role\": \"user\",\n          \"content\": \"Recording podcasts\"\n        }\n      ],\n      \"tool_definition\": {\n        \"format\": \"json_schema\",\n        \"include_examples\": true\n      },\n      \"exclude_product_ids\": [\n        \"a174d5ae-4a1c-33e4-7277-85c1f952db85\",\n        \"da1bc535-b09c-d094-712b-08639c1fcd44\"\n      ],\n      \"experiment_id\": \"string\",\n      \"metadata\": {\n        \"internal_request_id\": \"req_abc123\",\n        \"feature_flag\": \"new_search_v2\",\n        \"deployment_env\": \"production\"\n      }\n    }\n  ]\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/search/batch",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"search",
+												"batch"
+											]
+										}
+									},
+									"status": "Too Many Requests",
+									"code": 429,
+									"_postman_previewlanguage": "text",
+									"header": [],
+									"cookie": [],
+									"body": null
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Contextual Ad Search (RAG)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "API-Version",
+								"value": "2024-01-15",
+								"description": "API version in date format (YYYY-MM-DD). Defaults to latest stable version. Header-based versioning allows cleaner URLs and easier version management.\n"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"query\": \"I need a high-quality microphone for recording podcasts.\",\n  \"limit\": 3,\n  \"stream\": false,\n  \"filters\": {\n    \"min_price\": 50,\n    \"max_price\": 500,\n    \"merchant\": \"Amazon\",\n    \"brand\": \"Sony\",\n    \"category\": \"Electronics\",\n    \"keyword_filter\": \"Sony\"\n  },\n  \"sort\": \"relevance\",\n  \"min_relevance_score\": 0.7,\n  \"session_id\": \"550e8400-e29b-41d4-a716-446655440000\",\n  \"conversation_context\": [\n    {\n      \"role\": \"user\",\n      \"content\": \"I'm looking for a microphone\"\n    },\n    {\n      \"role\": \"assistant\",\n      \"content\": \"What will you be using it for?\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"Recording podcasts\"\n    }\n  ],\n  \"tool_definition\": {\n    \"format\": \"json_schema\",\n    \"include_examples\": true\n  },\n  \"exclude_product_ids\": [\n    \"4dc09049-edd7-fbdc-c48d-e4d3077289c8\",\n    \"ec1e106d-d184-8b28-cdad-e577aefa0a1d\"\n  ],\n  \"experiment_id\": \"string\",\n  \"metadata\": {\n    \"internal_request_id\": \"req_abc123\",\n    \"feature_flag\": \"new_search_v2\",\n    \"deployment_env\": \"production\"\n  }\n}",
+							"options": {
+								"raw": {
+									"headerFamily": "json",
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/search",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"search"
+							]
+						},
+						"description": "Takes a user prompt or agent context, generates an embedding,  and performs a vector search against LanceDB Cloud to return the most relevant products. API versioning is handled via the `API-Version` header (defaults to latest). Supports both streaming (SSE) and non-streaming responses via the `stream` flag in the request body.\n"
+					},
+					"response": [
+						{
+							"name": "Successful search results (JSON or SSE stream based on `stream` flag)",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "API-Version",
+										"value": "2024-01-15",
+										"description": "API version in date format (YYYY-MM-DD). Defaults to latest stable version. Header-based versioning allows cleaner URLs and easier version management.\n"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "x-api-key",
+										"value": "<API Key>",
+										"description": "Added as a part of security scheme: apikey"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"query\": \"I need a high-quality microphone for recording podcasts.\",\n  \"limit\": 3,\n  \"stream\": false,\n  \"filters\": {\n    \"min_price\": 50,\n    \"max_price\": 500,\n    \"merchant\": \"Amazon\",\n    \"brand\": \"Sony\",\n    \"category\": \"Electronics\",\n    \"keyword_filter\": \"Sony\"\n  },\n  \"sort\": \"relevance\",\n  \"min_relevance_score\": 0.7,\n  \"session_id\": \"550e8400-e29b-41d4-a716-446655440000\",\n  \"conversation_context\": [\n    {\n      \"role\": \"user\",\n      \"content\": \"I'm looking for a microphone\"\n    },\n    {\n      \"role\": \"assistant\",\n      \"content\": \"What will you be using it for?\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"Recording podcasts\"\n    }\n  ],\n  \"tool_definition\": {\n    \"format\": \"json_schema\",\n    \"include_examples\": true\n  },\n  \"exclude_product_ids\": [\n    \"4dc09049-edd7-fbdc-c48d-e4d3077289c8\",\n    \"ec1e106d-d184-8b28-cdad-e577aefa0a1d\"\n  ],\n  \"experiment_id\": \"string\",\n  \"metadata\": {\n    \"internal_request_id\": \"req_abc123\",\n    \"feature_flag\": \"new_search_v2\",\n    \"deployment_env\": \"production\"\n  }\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/search",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"search"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "1000",
+									"description": {
+										"content": "The number of requests allowed per time window",
+										"type": "text/plain"
+									}
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "987",
+									"description": {
+										"content": "The number of requests remaining in the current time window",
+										"type": "text/plain"
+									}
+								},
+								{
+									"key": "X-RateLimit-Reset",
+									"value": "1704067200",
+									"description": {
+										"content": "Unix timestamp when the rate limit window resets",
+										"type": "text/plain"
+									}
+								},
+								{
+									"key": "X-Search-Time",
+									"value": "45.2",
+									"description": {
+										"content": "Total search time in milliseconds (LanceDB vector search)",
+										"type": "text/plain"
+									}
+								},
+								{
+									"key": "X-Embedding-Time",
+									"value": "12.5",
+									"description": {
+										"content": "Time taken to generate embedding in milliseconds",
+										"type": "text/plain"
+									}
+								},
+								{
+									"key": "X-Cache-Hit",
+									"value": "false",
+									"description": {
+										"content": "Whether the result was served from cache (true/false)",
+										"type": "text/plain"
+									}
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"request_id\": \"2fdf6f97-9e6c-0d39-b84d-e88add7d1071\",\n  \"results\": [\n    {\n      \"product_id\": \"e218af6a-0aeb-d25a-13bc-82c50fcd41d6\",\n      \"impression_id\": \"5a6738ce-5401-6f45-feb6-dbe50e019fe2\",\n      \"title\": \"Sony WH-1000XM5 Noise Canceling Headphones\",\n      \"description\": \"Top-tier noise cancellation and 30-hour battery life.\",\n      \"url\": \"https://ad-tokens.com/p/12345\",\n      \"price\": \"$348.00\",\n      \"merchant\": \"Amazon\",\n      \"brand\": \"Sony\",\n      \"relevance_score\": 0.98,\n      \"relevance_explanation\": \"Matched because you mentioned 'podcasting' and this is a top-rated XLR microphone with excellent audio quality.\",\n      \"currency\": \"USD\",\n      \"last_updated_at\": \"2024-01-15T10:30:00Z\",\n      \"image_url\": \"https://images.amazon.com/products/12345.jpg\",\n      \"disclosure_text\": \"As an Amazon Associate, we earn from qualifying purchases.\"\n    },\n    {\n      \"product_id\": \"679cb57c-199a-93c2-a46d-99022a1e5e74\",\n      \"impression_id\": \"a9ac8934-4de2-ba4a-9c44-fbcd3788c89f\",\n      \"title\": \"Sony WH-1000XM5 Noise Canceling Headphones\",\n      \"description\": \"Top-tier noise cancellation and 30-hour battery life.\",\n      \"url\": \"https://ad-tokens.com/p/12345\",\n      \"price\": \"$348.00\",\n      \"merchant\": \"Amazon\",\n      \"brand\": \"Sony\",\n      \"relevance_score\": 0.98,\n      \"relevance_explanation\": \"Matched because you mentioned 'podcasting' and this is a top-rated XLR microphone with excellent audio quality.\",\n      \"currency\": \"USD\",\n      \"last_updated_at\": \"2024-01-15T10:30:00Z\",\n      \"image_url\": \"https://images.amazon.com/products/12345.jpg\",\n      \"disclosure_text\": \"As an Amazon Associate, we earn from qualifying purchases.\"\n    }\n  ],\n  \"metadata\": {\n    \"total_matches\": 9697,\n    \"session_id\": \"34248770-525b-3a59-1570-f588fa804e73\",\n    \"model_version\": \"string\",\n    \"tool_definition\": {\n      \"name\": \"get_product_recommendations\",\n      \"description\": \"Returns contextual product recommendations based on user intent\",\n      \"parameters\": {},\n      \"format\": \"openai_function\"\n    }\n  }\n}"
+						},
+						{
+							"name": "400 response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "API-Version",
+										"value": "2024-01-15",
+										"description": "API version in date format (YYYY-MM-DD). Defaults to latest stable version. Header-based versioning allows cleaner URLs and easier version management.\n"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "x-api-key",
+										"value": "<API Key>",
+										"description": "Added as a part of security scheme: apikey"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"query\": \"I need a high-quality microphone for recording podcasts.\",\n  \"limit\": 3,\n  \"stream\": false,\n  \"filters\": {\n    \"min_price\": 50,\n    \"max_price\": 500,\n    \"merchant\": \"Amazon\",\n    \"brand\": \"Sony\",\n    \"category\": \"Electronics\",\n    \"keyword_filter\": \"Sony\"\n  },\n  \"sort\": \"relevance\",\n  \"min_relevance_score\": 0.7,\n  \"session_id\": \"550e8400-e29b-41d4-a716-446655440000\",\n  \"conversation_context\": [\n    {\n      \"role\": \"user\",\n      \"content\": \"I'm looking for a microphone\"\n    },\n    {\n      \"role\": \"assistant\",\n      \"content\": \"What will you be using it for?\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"Recording podcasts\"\n    }\n  ],\n  \"tool_definition\": {\n    \"format\": \"json_schema\",\n    \"include_examples\": true\n  },\n  \"exclude_product_ids\": [\n    \"4dc09049-edd7-fbdc-c48d-e4d3077289c8\",\n    \"ec1e106d-d184-8b28-cdad-e577aefa0a1d\"\n  ],\n  \"experiment_id\": \"string\",\n  \"metadata\": {\n    \"internal_request_id\": \"req_abc123\",\n    \"feature_flag\": \"new_search_v2\",\n    \"deployment_env\": \"production\"\n  }\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/search",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"search"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": null
+						},
+						{
+							"name": "401 response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "API-Version",
+										"value": "2024-01-15",
+										"description": "API version in date format (YYYY-MM-DD). Defaults to latest stable version. Header-based versioning allows cleaner URLs and easier version management.\n"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "x-api-key",
+										"value": "<API Key>",
+										"description": "Added as a part of security scheme: apikey"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"query\": \"I need a high-quality microphone for recording podcasts.\",\n  \"limit\": 3,\n  \"stream\": false,\n  \"filters\": {\n    \"min_price\": 50,\n    \"max_price\": 500,\n    \"merchant\": \"Amazon\",\n    \"brand\": \"Sony\",\n    \"category\": \"Electronics\",\n    \"keyword_filter\": \"Sony\"\n  },\n  \"sort\": \"relevance\",\n  \"min_relevance_score\": 0.7,\n  \"session_id\": \"550e8400-e29b-41d4-a716-446655440000\",\n  \"conversation_context\": [\n    {\n      \"role\": \"user\",\n      \"content\": \"I'm looking for a microphone\"\n    },\n    {\n      \"role\": \"assistant\",\n      \"content\": \"What will you be using it for?\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"Recording podcasts\"\n    }\n  ],\n  \"tool_definition\": {\n    \"format\": \"json_schema\",\n    \"include_examples\": true\n  },\n  \"exclude_product_ids\": [\n    \"4dc09049-edd7-fbdc-c48d-e4d3077289c8\",\n    \"ec1e106d-d184-8b28-cdad-e577aefa0a1d\"\n  ],\n  \"experiment_id\": \"string\",\n  \"metadata\": {\n    \"internal_request_id\": \"req_abc123\",\n    \"feature_flag\": \"new_search_v2\",\n    \"deployment_env\": \"production\"\n  }\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/search",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"search"
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": null
+						},
+						{
+							"name": "429 response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "API-Version",
+										"value": "2024-01-15",
+										"description": "API version in date format (YYYY-MM-DD). Defaults to latest stable version. Header-based versioning allows cleaner URLs and easier version management.\n"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "x-api-key",
+										"value": "<API Key>",
+										"description": "Added as a part of security scheme: apikey"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"query\": \"I need a high-quality microphone for recording podcasts.\",\n  \"limit\": 3,\n  \"stream\": false,\n  \"filters\": {\n    \"min_price\": 50,\n    \"max_price\": 500,\n    \"merchant\": \"Amazon\",\n    \"brand\": \"Sony\",\n    \"category\": \"Electronics\",\n    \"keyword_filter\": \"Sony\"\n  },\n  \"sort\": \"relevance\",\n  \"min_relevance_score\": 0.7,\n  \"session_id\": \"550e8400-e29b-41d4-a716-446655440000\",\n  \"conversation_context\": [\n    {\n      \"role\": \"user\",\n      \"content\": \"I'm looking for a microphone\"\n    },\n    {\n      \"role\": \"assistant\",\n      \"content\": \"What will you be using it for?\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"Recording podcasts\"\n    }\n  ],\n  \"tool_definition\": {\n    \"format\": \"json_schema\",\n    \"include_examples\": true\n  },\n  \"exclude_product_ids\": [\n    \"4dc09049-edd7-fbdc-c48d-e4d3077289c8\",\n    \"ec1e106d-d184-8b28-cdad-e577aefa0a1d\"\n  ],\n  \"experiment_id\": \"string\",\n  \"metadata\": {\n    \"internal_request_id\": \"req_abc123\",\n    \"feature_flag\": \"new_search_v2\",\n    \"deployment_env\": \"production\"\n  }\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/search",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"search"
+									]
+								}
+							},
+							"status": "Too Many Requests",
+							"code": 429,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": null
+						},
+						{
+							"name": "500 response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "API-Version",
+										"value": "2024-01-15",
+										"description": "API version in date format (YYYY-MM-DD). Defaults to latest stable version. Header-based versioning allows cleaner URLs and easier version management.\n"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "x-api-key",
+										"value": "<API Key>",
+										"description": "Added as a part of security scheme: apikey"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"query\": \"I need a high-quality microphone for recording podcasts.\",\n  \"limit\": 3,\n  \"stream\": false,\n  \"filters\": {\n    \"min_price\": 50,\n    \"max_price\": 500,\n    \"merchant\": \"Amazon\",\n    \"brand\": \"Sony\",\n    \"category\": \"Electronics\",\n    \"keyword_filter\": \"Sony\"\n  },\n  \"sort\": \"relevance\",\n  \"min_relevance_score\": 0.7,\n  \"session_id\": \"550e8400-e29b-41d4-a716-446655440000\",\n  \"conversation_context\": [\n    {\n      \"role\": \"user\",\n      \"content\": \"I'm looking for a microphone\"\n    },\n    {\n      \"role\": \"assistant\",\n      \"content\": \"What will you be using it for?\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"Recording podcasts\"\n    }\n  ],\n  \"tool_definition\": {\n    \"format\": \"json_schema\",\n    \"include_examples\": true\n  },\n  \"exclude_product_ids\": [\n    \"4dc09049-edd7-fbdc-c48d-e4d3077289c8\",\n    \"ec1e106d-d184-8b28-cdad-e577aefa0a1d\"\n  ],\n  \"experiment_id\": \"string\",\n  \"metadata\": {\n    \"internal_request_id\": \"req_abc123\",\n    \"feature_flag\": \"new_search_v2\",\n    \"deployment_env\": \"production\"\n  }\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/search",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"search"
+									]
+								}
+							},
+							"status": "Internal Server Error",
+							"code": 500,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": null
+						},
+						{
+							"name": "503 response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "API-Version",
+										"value": "2024-01-15",
+										"description": "API version in date format (YYYY-MM-DD). Defaults to latest stable version. Header-based versioning allows cleaner URLs and easier version management.\n"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "x-api-key",
+										"value": "<API Key>",
+										"description": "Added as a part of security scheme: apikey"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"query\": \"I need a high-quality microphone for recording podcasts.\",\n  \"limit\": 3,\n  \"stream\": false,\n  \"filters\": {\n    \"min_price\": 50,\n    \"max_price\": 500,\n    \"merchant\": \"Amazon\",\n    \"brand\": \"Sony\",\n    \"category\": \"Electronics\",\n    \"keyword_filter\": \"Sony\"\n  },\n  \"sort\": \"relevance\",\n  \"min_relevance_score\": 0.7,\n  \"session_id\": \"550e8400-e29b-41d4-a716-446655440000\",\n  \"conversation_context\": [\n    {\n      \"role\": \"user\",\n      \"content\": \"I'm looking for a microphone\"\n    },\n    {\n      \"role\": \"assistant\",\n      \"content\": \"What will you be using it for?\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"Recording podcasts\"\n    }\n  ],\n  \"tool_definition\": {\n    \"format\": \"json_schema\",\n    \"include_examples\": true\n  },\n  \"exclude_product_ids\": [\n    \"4dc09049-edd7-fbdc-c48d-e4d3077289c8\",\n    \"ec1e106d-d184-8b28-cdad-e577aefa0a1d\"\n  ],\n  \"experiment_id\": \"string\",\n  \"metadata\": {\n    \"internal_request_id\": \"req_abc123\",\n    \"feature_flag\": \"new_search_v2\",\n    \"deployment_env\": \"production\"\n  }\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/search",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"search"
+									]
+								}
+							},
+							"status": "Service Unavailable",
+							"code": 503,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": null
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "keys",
+			"item": [
+				{
+					"name": "{key_id}",
+					"item": [
+						{
+							"name": "rotate",
+							"item": [
+								{
+									"name": "Rotate API Key",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{bearerToken}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/keys/:key_id/rotate",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"keys",
+												":key_id",
+												"rotate"
+											],
+											"variable": [
+												{
+													"key": "key_id",
+													"value": "6b8beed6-c85c-9de0-4616-158c1c441e57",
+													"description": "The ID of the API key to rotate"
+												}
+											]
+										},
+										"description": "Generates a new API key to replace an existing one. The old key is automatically revoked, and a new key is returned. This is useful for key rotation as a security best practice. The new key is shown only once in the response - store it securely.\n"
+									},
+									"response": [
+										{
+											"name": "Key successfully rotated",
+											"originalRequest": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer <token>",
+														"description": "Added as a part of security scheme: bearer"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/keys/:key_id/rotate",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"keys",
+														":key_id",
+														"rotate"
+													],
+													"variable": [
+														{
+															"key": "key_id",
+															"value": "6b8beed6-c85c-9de0-4616-158c1c441e57",
+															"description": "The ID of the API key to rotate"
+														}
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"key\": \"string\",\n  \"metadata\": {\n    \"id\": \"7055b0f4-3f80-3737-6241-91f634cebef2\",\n    \"name\": \"Hugging Face Bot Key\",\n    \"prefix\": \"at_live_\",\n    \"created_at\": \"1952-09-29T23:27:31.329Z\",\n    \"last_used_at\": \"2003-11-20T14:41:28.074Z\",\n    \"status\": \"active\"\n  }\n}"
+										},
+										{
+											"name": "400 response",
+											"originalRequest": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Authorization",
+														"value": "Bearer <token>",
+														"description": "Added as a part of security scheme: bearer"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/keys/:key_id/rotate",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"keys",
+														":key_id",
+														"rotate"
+													],
+													"variable": [
+														{
+															"key": "key_id",
+															"value": "6b8beed6-c85c-9de0-4616-158c1c441e57",
+															"description": "The ID of the API key to rotate"
+														}
+													]
+												}
+											},
+											"status": "Bad Request",
+											"code": 400,
+											"_postman_previewlanguage": "text",
+											"header": [],
+											"cookie": [],
+											"body": null
+										},
+										{
+											"name": "401 response",
+											"originalRequest": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Authorization",
+														"value": "Bearer <token>",
+														"description": "Added as a part of security scheme: bearer"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/keys/:key_id/rotate",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"keys",
+														":key_id",
+														"rotate"
+													],
+													"variable": [
+														{
+															"key": "key_id",
+															"value": "6b8beed6-c85c-9de0-4616-158c1c441e57",
+															"description": "The ID of the API key to rotate"
+														}
+													]
+												}
+											},
+											"status": "Unauthorized",
+											"code": 401,
+											"_postman_previewlanguage": "text",
+											"header": [],
+											"cookie": [],
+											"body": null
+										},
+										{
+											"name": "404 response",
+											"originalRequest": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Authorization",
+														"value": "Bearer <token>",
+														"description": "Added as a part of security scheme: bearer"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/keys/:key_id/rotate",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"keys",
+														":key_id",
+														"rotate"
+													],
+													"variable": [
+														{
+															"key": "key_id",
+															"value": "6b8beed6-c85c-9de0-4616-158c1c441e57",
+															"description": "The ID of the API key to rotate"
+														}
+													]
+												}
+											},
+											"status": "Not Found",
+											"code": 404,
+											"_postman_previewlanguage": "text",
+											"header": [],
+											"cookie": [],
+											"body": null
+										}
+									]
+								}
+							]
+						},
+						{
+							"name": "Delete API Key",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{bearerToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/keys/:key_id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"keys",
+										":key_id"
+									],
+									"variable": [
+										{
+											"key": "key_id",
+											"value": "6b8beed6-c85c-9de0-4616-158c1c441e57",
+											"description": "The ID of the API key to delete"
+										}
+									]
+								},
+								"description": "Revokes and deletes an API key. This action cannot be undone."
+							},
+							"response": [
+								{
+									"name": "Key successfully deleted",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer <token>",
+												"description": "Added as a part of security scheme: bearer"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/keys/:key_id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"keys",
+												":key_id"
+											],
+											"variable": [
+												{
+													"key": "key_id",
+													"value": "6b8beed6-c85c-9de0-4616-158c1c441e57",
+													"description": "The ID of the API key to delete"
+												}
+											]
+										}
+									},
+									"status": "No Content",
+									"code": 204,
+									"_postman_previewlanguage": "text",
+									"header": [],
+									"cookie": [],
+									"body": null
+								},
+								{
+									"name": "401 response",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer <token>",
+												"description": "Added as a part of security scheme: bearer"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/keys/:key_id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"keys",
+												":key_id"
+											],
+											"variable": [
+												{
+													"key": "key_id",
+													"value": "6b8beed6-c85c-9de0-4616-158c1c441e57",
+													"description": "The ID of the API key to delete"
+												}
+											]
+										}
+									},
+									"status": "Unauthorized",
+									"code": 401,
+									"_postman_previewlanguage": "text",
+									"header": [],
+									"cookie": [],
+									"body": null
+								},
+								{
+									"name": "404 response",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer <token>",
+												"description": "Added as a part of security scheme: bearer"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/keys/:key_id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"keys",
+												":key_id"
+											],
+											"variable": [
+												{
+													"key": "key_id",
+													"value": "6b8beed6-c85c-9de0-4616-158c1c441e57",
+													"description": "The ID of the API key to delete"
+												}
+											]
+										}
+									},
+									"status": "Not Found",
+									"code": 404,
+									"_postman_previewlanguage": "text",
+									"header": [],
+									"cookie": [],
+									"body": null
+								}
+							]
+						},
+						{
+							"name": "Revoke API Key",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{bearerToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/keys/:key_id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"keys",
+										":key_id"
+									],
+									"variable": [
+										{
+											"key": "key_id",
+											"value": "6b8beed6-c85c-9de0-4616-158c1c441e57",
+											"description": "The ID of the API key to revoke"
+										}
+									]
+								},
+								"description": "Revokes an API key without deleting it. The key will no longer be usable for authentication, but it will remain in the system for audit purposes. This is useful when you want to disable a key temporarily or keep a record of revoked keys.\n"
+							},
+							"response": [
+								{
+									"name": "Key successfully revoked",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer <token>",
+												"description": "Added as a part of security scheme: bearer"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/keys/:key_id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"keys",
+												":key_id"
+											],
+											"variable": [
+												{
+													"key": "key_id",
+													"value": "6b8beed6-c85c-9de0-4616-158c1c441e57",
+													"description": "The ID of the API key to revoke"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"id\": \"7a939dc9-aa8c-490e-6fa0-0627c0e3201f\",\n  \"name\": \"Hugging Face Bot Key\",\n  \"prefix\": \"at_live_\",\n  \"created_at\": \"1967-11-23T20:42:42.222Z\",\n  \"last_used_at\": \"1988-06-09T00:22:36.273Z\",\n  \"status\": \"active\"\n}"
+								},
+								{
+									"name": "401 response",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer <token>",
+												"description": "Added as a part of security scheme: bearer"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/keys/:key_id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"keys",
+												":key_id"
+											],
+											"variable": [
+												{
+													"key": "key_id",
+													"value": "6b8beed6-c85c-9de0-4616-158c1c441e57",
+													"description": "The ID of the API key to revoke"
+												}
+											]
+										}
+									},
+									"status": "Unauthorized",
+									"code": 401,
+									"_postman_previewlanguage": "text",
+									"header": [],
+									"cookie": [],
+									"body": null
+								},
+								{
+									"name": "404 response",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer <token>",
+												"description": "Added as a part of security scheme: bearer"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/keys/:key_id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"keys",
+												":key_id"
+											],
+											"variable": [
+												{
+													"key": "key_id",
+													"value": "6b8beed6-c85c-9de0-4616-158c1c441e57",
+													"description": "The ID of the API key to revoke"
+												}
+											]
+										}
+									},
+									"status": "Not Found",
+									"code": 404,
+									"_postman_previewlanguage": "text",
+									"header": [],
+									"cookie": [],
+									"body": null
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "List API Keys",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/keys?limit=50&offset=0",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"keys"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "50",
+									"description": "Maximum number of keys to return per page"
+								},
+								{
+									"key": "offset",
+									"value": "0",
+									"description": "Number of keys to skip for pagination"
+								}
+							]
+						},
+						"description": "Returns API keys associated with the authenticated user (via Supabase). Results are paginated for professional tooling compatibility.\n"
+					},
+					"response": [
+						{
+							"name": "Paginated list of keys",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer <token>",
+										"description": "Added as a part of security scheme: bearer"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/keys?limit=50&offset=0",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"keys"
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "50",
+											"description": "Maximum number of keys to return per page"
+										},
+										{
+											"key": "offset",
+											"value": "0",
+											"description": "Number of keys to skip for pagination"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Link",
+									"value": "</keys?limit=50&offset=50>; rel=\"next\", </keys?limit=50&offset=0>; rel=\"first\"",
+									"description": {
+										"content": "Standard HTTP Link header for pagination. Contains `rel=\"next\"`, `rel=\"prev\"`,  `rel=\"first\"`, and `rel=\"last\"` links when applicable. Follows RFC 5988. Links use relative paths and should be resolved against the request URL.\n",
+										"type": "text/plain"
+									}
+								},
+								{
+									"key": "X-Total-Count",
+									"value": "6754",
+									"description": {
+										"content": "Total number of keys available",
+										"type": "text/plain"
+									}
+								}
+							],
+							"cookie": [],
+							"body": "[\n  {\n    \"id\": \"5cbdaeb2-91d5-4eb6-9d4a-61856edddf37\",\n    \"name\": \"Hugging Face Bot Key\",\n    \"prefix\": \"at_live_\",\n    \"created_at\": \"1973-02-18T01:38:40.924Z\",\n    \"last_used_at\": \"1997-01-06T09:12:41.523Z\",\n    \"status\": \"active\"\n  },\n  {\n    \"id\": \"33733087-1a55-3a5c-8411-88e5de24e1bb\",\n    \"name\": \"Hugging Face Bot Key\",\n    \"prefix\": \"at_live_\",\n    \"created_at\": \"2007-11-16T16:07:03.937Z\",\n    \"last_used_at\": \"1998-09-26T00:02:00.317Z\",\n    \"status\": \"active\"\n  }\n]"
+						},
+						{
+							"name": "401 response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer <token>",
+										"description": "Added as a part of security scheme: bearer"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/keys?limit=50&offset=0",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"keys"
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "50",
+											"description": "Maximum number of keys to return per page"
+										},
+										{
+											"key": "offset",
+											"value": "0",
+											"description": "Number of keys to skip for pagination"
+										}
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": null
+						}
+					]
+				},
+				{
+					"name": "Create API Key",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Production Bot\"\n}",
+							"options": {
+								"raw": {
+									"headerFamily": "json",
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/keys",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"keys"
+							]
+						},
+						"description": "Generates a new scoped API key for agent integration."
+					},
+					"response": [
+						{
+							"name": "Key created",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer <token>",
+										"description": "Added as a part of security scheme: bearer"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"Production Bot\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/keys",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"keys"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"key\": \"string\",\n  \"metadata\": {\n    \"id\": \"6ff11ebf-eced-ce37-393a-c754aa75c793\",\n    \"name\": \"Hugging Face Bot Key\",\n    \"prefix\": \"at_live_\",\n    \"created_at\": \"1994-02-09T06:37:42.572Z\",\n    \"last_used_at\": \"1953-08-27T09:33:45.301Z\",\n    \"status\": \"active\"\n  }\n}"
+						},
+						{
+							"name": "400 response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer <token>",
+										"description": "Added as a part of security scheme: bearer"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"Production Bot\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/keys",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"keys"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": null
+						},
+						{
+							"name": "401 response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer <token>",
+										"description": "Added as a part of security scheme: bearer"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"Production Bot\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/keys",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"keys"
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": null
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "health",
+			"item": [
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/health",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"health"
+							]
+						},
+						"description": "Returns the health status of the service and its dependencies (LanceDB, OpenAI)."
+					},
+					"response": [
+						{
+							"name": "Service health status",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "x-api-key",
+										"value": "<API Key>",
+										"description": "Added as a part of security scheme: apikey"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/health",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"health"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"status\": \"ok\",\n  \"timestamp\": \"1965-12-05T20:50:59.601Z\",\n  \"dependencies\": {\n    \"lancedb\": {\n      \"status\": \"unhealthy\",\n      \"latency_ms\": 7129.841219360891\n    },\n    \"openai\": {\n      \"status\": \"healthy\",\n      \"latency_ms\": 188.35767172025174\n    }\n  }\n}"
+						},
+						{
+							"name": "503 response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "x-api-key",
+										"value": "<API Key>",
+										"description": "Added as a part of security scheme: apikey"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/health",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"health"
+									]
+								}
+							},
+							"status": "Service Unavailable",
+							"code": 503,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": null
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "usage",
+			"item": [
+				{
+					"name": "Get Usage Statistics",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/usage?start_date=1990-08-09T17:32:51.723Z&end_date=1990-08-09T17:32:51.723Z",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"usage"
+							],
+							"query": [
+								{
+									"key": "start_date",
+									"value": "1990-08-09T17:32:51.723Z",
+									"description": "Start of the time period (ISO 8601). Defaults to 30 days ago."
+								},
+								{
+									"key": "end_date",
+									"value": "1990-08-09T17:32:51.723Z",
+									"description": "End of the time period (ISO 8601). Defaults to now."
+								}
+							]
+						},
+						"description": "Returns usage statistics for the authenticated user's API keys."
+					},
+					"response": [
+						{
+							"name": "Usage statistics",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer <token>",
+										"description": "Added as a part of security scheme: bearer"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/usage?start_date=1990-08-09T17:32:51.723Z&end_date=1990-08-09T17:32:51.723Z",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"usage"
+									],
+									"query": [
+										{
+											"key": "start_date",
+											"value": "1990-08-09T17:32:51.723Z",
+											"description": "Start of the time period (ISO 8601). Defaults to 30 days ago."
+										},
+										{
+											"key": "end_date",
+											"value": "1990-08-09T17:32:51.723Z",
+											"description": "End of the time period (ISO 8601). Defaults to now."
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"period_start\": \"2013-08-21T23:06:57.677Z\",\n  \"period_end\": \"1960-12-22T18:25:11.505Z\",\n  \"total_requests\": 4057,\n  \"search_queries\": 6413,\n  \"rate_limit\": {\n    \"limit\": 5340,\n    \"remaining\": 2609,\n    \"reset_at\": \"2001-04-05T03:46:56.537Z\"\n  }\n}"
+						},
+						{
+							"name": "401 response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer <token>",
+										"description": "Added as a part of security scheme: bearer"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/usage?start_date=1990-08-09T17:32:51.723Z&end_date=1990-08-09T17:32:51.723Z",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"usage"
+									],
+									"query": [
+										{
+											"key": "start_date",
+											"value": "1990-08-09T17:32:51.723Z",
+											"description": "Start of the time period (ISO 8601). Defaults to 30 days ago."
+										},
+										{
+											"key": "end_date",
+											"value": "1990-08-09T17:32:51.723Z",
+											"description": "End of the time period (ISO 8601). Defaults to now."
+										}
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": null
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "products",
+			"item": [
+				{
+					"name": "{product_id}",
+					"item": [
+						{
+							"name": "similar",
+							"item": [
+								{
+									"name": "Get Similar Products",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/products/:product_id/similar?limit=5",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"products",
+												":product_id",
+												"similar"
+											],
+											"query": [
+												{
+													"key": "limit",
+													"value": "5"
+												}
+											],
+											"variable": [
+												{
+													"key": "product_id",
+													"value": "6b8beed6-c85c-9de0-4616-158c1c441e57",
+													"description": "The product_id from an AdResponse to find similar products for"
+												}
+											]
+										},
+										"description": "Returns products similar to a given product. Uses vector similarity and collaborative filtering. Creates network effects: the more developers use this, the better recommendations become.\n"
+									},
+									"response": [
+										{
+											"name": "Similar products",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json"
+													},
+													{
+														"key": "x-api-key",
+														"value": "<API Key>",
+														"description": "Added as a part of security scheme: apikey"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/products/:product_id/similar?limit=5",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"products",
+														":product_id",
+														"similar"
+													],
+													"query": [
+														{
+															"key": "limit",
+															"value": "5"
+														}
+													],
+													"variable": [
+														{
+															"key": "product_id",
+															"value": "6b8beed6-c85c-9de0-4616-158c1c441e57",
+															"description": "The product_id from an AdResponse to find similar products for"
+														}
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"results\": [\n    {\n      \"product_id\": \"b9b196a9-1d81-2947-25e7-a25ff45da15b\",\n      \"impression_id\": \"25cb8197-89f5-ff94-a453-90cde1c1d3a2\",\n      \"title\": \"Sony WH-1000XM5 Noise Canceling Headphones\",\n      \"description\": \"Top-tier noise cancellation and 30-hour battery life.\",\n      \"url\": \"https://ad-tokens.com/p/12345\",\n      \"price\": \"$348.00\",\n      \"merchant\": \"Amazon\",\n      \"brand\": \"Sony\",\n      \"relevance_score\": 0.98,\n      \"relevance_explanation\": \"Matched because you mentioned 'podcasting' and this is a top-rated XLR microphone with excellent audio quality.\",\n      \"currency\": \"USD\",\n      \"last_updated_at\": \"2024-01-15T10:30:00Z\",\n      \"image_url\": \"https://images.amazon.com/products/12345.jpg\",\n      \"disclosure_text\": \"As an Amazon Associate, we earn from qualifying purchases.\"\n    },\n    {\n      \"product_id\": \"68b179a2-bcd5-4ebe-db0c-a17716ba26c3\",\n      \"impression_id\": \"43688a9c-c117-6250-f726-b506d51d5fb9\",\n      \"title\": \"Sony WH-1000XM5 Noise Canceling Headphones\",\n      \"description\": \"Top-tier noise cancellation and 30-hour battery life.\",\n      \"url\": \"https://ad-tokens.com/p/12345\",\n      \"price\": \"$348.00\",\n      \"merchant\": \"Amazon\",\n      \"brand\": \"Sony\",\n      \"relevance_score\": 0.98,\n      \"relevance_explanation\": \"Matched because you mentioned 'podcasting' and this is a top-rated XLR microphone with excellent audio quality.\",\n      \"currency\": \"USD\",\n      \"last_updated_at\": \"2024-01-15T10:30:00Z\",\n      \"image_url\": \"https://images.amazon.com/products/12345.jpg\",\n      \"disclosure_text\": \"As an Amazon Associate, we earn from qualifying purchases.\"\n    }\n  ],\n  \"metadata\": {\n    \"similarity_scores\": [\n      1299.2527978997236,\n      2925.3603637234037\n    ]\n  }\n}"
+										},
+										{
+											"name": "401 response",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "x-api-key",
+														"value": "<API Key>",
+														"description": "Added as a part of security scheme: apikey"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/products/:product_id/similar?limit=5",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"products",
+														":product_id",
+														"similar"
+													],
+													"query": [
+														{
+															"key": "limit",
+															"value": "5"
+														}
+													],
+													"variable": [
+														{
+															"key": "product_id",
+															"value": "6b8beed6-c85c-9de0-4616-158c1c441e57",
+															"description": "The product_id from an AdResponse to find similar products for"
+														}
+													]
+												}
+											},
+											"status": "Unauthorized",
+											"code": 401,
+											"_postman_previewlanguage": "text",
+											"header": [],
+											"cookie": [],
+											"body": null
+										},
+										{
+											"name": "404 response",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "x-api-key",
+														"value": "<API Key>",
+														"description": "Added as a part of security scheme: apikey"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/products/:product_id/similar?limit=5",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"products",
+														":product_id",
+														"similar"
+													],
+													"query": [
+														{
+															"key": "limit",
+															"value": "5"
+														}
+													],
+													"variable": [
+														{
+															"key": "product_id",
+															"value": "6b8beed6-c85c-9de0-4616-158c1c441e57",
+															"description": "The product_id from an AdResponse to find similar products for"
+														}
+													]
+												}
+											},
+											"status": "Not Found",
+											"code": 404,
+											"_postman_previewlanguage": "text",
+											"header": [],
+											"cookie": [],
+											"body": null
+										}
+									]
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "feedback",
+			"item": [
+				{
+					"name": "Submit Relevance Feedback",
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "key",
+									"value": "x-api-key",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "{{apiKey}}",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"request_id\": \"7bc02178-20d2-3264-ba00-2fe9d28270ff\",\n  \"product_id\": \"6c56bede-6e6f-2191-a69d-8eb56bdd5817\",\n  \"relevant\": false,\n  \"reason\": \"User was looking for budget options, but this was too expensive\",\n  \"user_clicked\": false\n}",
+							"options": {
+								"raw": {
+									"headerFamily": "json",
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/feedback",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"feedback"
+							]
+						},
+						"description": "Allows developers to report whether ads were relevant or not. Creates a data moat: feedback improves the ranking model over time, making the service better for everyone. This is a key competitive advantage that competitors can't easily replicate.\n"
+					},
+					"response": [
+						{
+							"name": "Feedback recorded",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "x-api-key",
+										"value": "<API Key>",
+										"description": "Added as a part of security scheme: apikey"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"request_id\": \"7bc02178-20d2-3264-ba00-2fe9d28270ff\",\n  \"product_id\": \"6c56bede-6e6f-2191-a69d-8eb56bdd5817\",\n  \"relevant\": false,\n  \"reason\": \"User was looking for budget options, but this was too expensive\",\n  \"user_clicked\": false\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/feedback",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"feedback"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"feedback_id\": \"30d608ba-0d18-293d-42ef-ecc23c40bb09\",\n  \"message\": \"Thank you for your feedback. This helps improve our recommendations.\"\n}"
+						},
+						{
+							"name": "400 response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "x-api-key",
+										"value": "<API Key>",
+										"description": "Added as a part of security scheme: apikey"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"request_id\": \"7bc02178-20d2-3264-ba00-2fe9d28270ff\",\n  \"product_id\": \"6c56bede-6e6f-2191-a69d-8eb56bdd5817\",\n  \"relevant\": false,\n  \"reason\": \"User was looking for budget options, but this was too expensive\",\n  \"user_clicked\": false\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/feedback",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"feedback"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": null
+						},
+						{
+							"name": "401 response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "x-api-key",
+										"value": "<API Key>",
+										"description": "Added as a part of security scheme: apikey"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"request_id\": \"7bc02178-20d2-3264-ba00-2fe9d28270ff\",\n  \"product_id\": \"6c56bede-6e6f-2191-a69d-8eb56bdd5817\",\n  \"relevant\": false,\n  \"reason\": \"User was looking for budget options, but this was too expensive\",\n  \"user_clicked\": false\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/feedback",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"feedback"
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": null
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "clicks",
+			"item": [
+				{
+					"name": "{impression_id}",
+					"item": [
+						{
+							"name": "Track Ad Click",
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "key",
+											"value": "x-api-key",
+											"type": "string"
+										},
+										{
+											"key": "value",
+											"value": "{{apiKey}}",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "header",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"request_id\": \"b9a861a0-956b-2bb2-5a14-fbda73eff362\",\n  \"user_agent\": \"string\",\n  \"conversion_value\": 1089.8040459566216\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/clicks/:impression_id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"clicks",
+										":impression_id"
+									],
+									"variable": [
+										{
+											"key": "impression_id",
+											"value": "6b8beed6-c85c-9de0-4616-158c1c441e57",
+											"description": "The impression_id from the AdResponse. Required for precise attribution tracking."
+										}
+									]
+								},
+								"description": "Records a click event for attribution tracking. Required for Skimlinks/Amazon compliance. Simplified: only requires impression_id in the path. The impression_id uniquely identifies the product impression, making additional body parameters unnecessary. Clean, simple, and impossible to mess up.\n"
+							},
+							"response": [
+								{
+									"name": "Click tracked successfully",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "x-api-key",
+												"value": "<API Key>",
+												"description": "Added as a part of security scheme: apikey"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"request_id\": \"b9a861a0-956b-2bb2-5a14-fbda73eff362\",\n  \"user_agent\": \"string\",\n  \"conversion_value\": 1089.8040459566216\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/clicks/:impression_id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"clicks",
+												":impression_id"
+											],
+											"variable": [
+												{
+													"key": "impression_id",
+													"value": "6b8beed6-c85c-9de0-4616-158c1c441e57",
+													"description": "The impression_id from the AdResponse. Required for precise attribution tracking."
+												}
+											]
+										}
+									},
+									"status": "Created",
+									"code": 201,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"impression_id\": \"aacb15c2-a257-cbe2-e52c-8588048ec696\",\n  \"product_id\": \"d2b92fab-581e-0a78-d1ff-028d19d16edf\",\n  \"request_id\": \"59ab84c9-dcae-72bf-cbbf-5675060ce296\",\n  \"timestamp\": \"2013-10-24T15:17:43.073Z\",\n  \"user_agent\": \"string\",\n  \"conversion_value\": 1855.3607871394818\n}"
+								},
+								{
+									"name": "400 response",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "x-api-key",
+												"value": "<API Key>",
+												"description": "Added as a part of security scheme: apikey"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"request_id\": \"b9a861a0-956b-2bb2-5a14-fbda73eff362\",\n  \"user_agent\": \"string\",\n  \"conversion_value\": 1089.8040459566216\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/clicks/:impression_id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"clicks",
+												":impression_id"
+											],
+											"variable": [
+												{
+													"key": "impression_id",
+													"value": "6b8beed6-c85c-9de0-4616-158c1c441e57",
+													"description": "The impression_id from the AdResponse. Required for precise attribution tracking."
+												}
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "text",
+									"header": [],
+									"cookie": [],
+									"body": null
+								},
+								{
+									"name": "401 response",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "x-api-key",
+												"value": "<API Key>",
+												"description": "Added as a part of security scheme: apikey"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"request_id\": \"b9a861a0-956b-2bb2-5a14-fbda73eff362\",\n  \"user_agent\": \"string\",\n  \"conversion_value\": 1089.8040459566216\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/clicks/:impression_id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"clicks",
+												":impression_id"
+											],
+											"variable": [
+												{
+													"key": "impression_id",
+													"value": "6b8beed6-c85c-9de0-4616-158c1c441e57",
+													"description": "The impression_id from the AdResponse. Required for precise attribution tracking."
+												}
+											]
+										}
+									},
+									"status": "Unauthorized",
+									"code": 401,
+									"_postman_previewlanguage": "text",
+									"header": [],
+									"cookie": [],
+									"body": null
+								},
+								{
+									"name": "404 response",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "x-api-key",
+												"value": "<API Key>",
+												"description": "Added as a part of security scheme: apikey"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"request_id\": \"b9a861a0-956b-2bb2-5a14-fbda73eff362\",\n  \"user_agent\": \"string\",\n  \"conversion_value\": 1089.8040459566216\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/clicks/:impression_id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"clicks",
+												":impression_id"
+											],
+											"variable": [
+												{
+													"key": "impression_id",
+													"value": "6b8beed6-c85c-9de0-4616-158c1c441e57",
+													"description": "The impression_id from the AdResponse. Required for precise attribution tracking."
+												}
+											]
+										}
+									},
+									"status": "Not Found",
+									"code": 404,
+									"_postman_previewlanguage": "text",
+									"header": [],
+									"cookie": [],
+									"body": null
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "sessions",
+			"item": [
+				{
+					"name": "List Active Sessions",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/sessions?limit=50&offset=0",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"sessions"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "50"
+								},
+								{
+									"key": "offset",
+									"value": "0"
+								}
+							]
+						},
+						"description": "Returns active conversation sessions for analytics. Helps developers understand user engagement patterns and optimize their agent's ad injection strategy.\n"
+					},
+					"response": [
+						{
+							"name": "List of sessions",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer <token>",
+										"description": "Added as a part of security scheme: bearer"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/sessions?limit=50&offset=0",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"sessions"
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "50"
+										},
+										{
+											"key": "offset",
+											"value": "0"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Link",
+									"value": "<https://api.ad-tokens.com/sessions?limit=50&offset=50>; rel=\"next\", <https://api.ad-tokens.com/sessions?limit=50&offset=0>; rel=\"first\"",
+									"description": {
+										"content": "Standard HTTP Link header for pagination. Contains `rel=\"next\"`, `rel=\"prev\"`,  `rel=\"first\"`, and `rel=\"last\"` links when applicable. Follows RFC 5988.\n",
+										"type": "text/plain"
+									}
+								},
+								{
+									"key": "X-Total-Count",
+									"value": "6754",
+									"description": {
+										"content": "Total number of sessions available",
+										"type": "text/plain"
+									}
+								}
+							],
+							"cookie": [],
+							"body": "[\n  {\n    \"session_id\": \"2b2a1945-4570-398b-e6f3-e9617bcff36a\",\n    \"created_at\": \"1955-01-03T22:17:48.934Z\",\n    \"last_activity_at\": \"1978-12-27T16:22:50.415Z\",\n    \"total_searches\": 5115,\n    \"total_clicks\": 1114,\n    \"conversion_rate\": 2569.3628322096697\n  },\n  {\n    \"session_id\": \"d43fb566-8c78-d269-6783-e191fd20fe77\",\n    \"created_at\": \"1949-11-23T22:42:36.018Z\",\n    \"last_activity_at\": \"1988-04-28T12:01:21.807Z\",\n    \"total_searches\": 4432,\n    \"total_clicks\": 5697,\n    \"conversion_rate\": 9725.985183770073\n  }\n]"
+						},
+						{
+							"name": "401 response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer <token>",
+										"description": "Added as a part of security scheme: bearer"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/sessions?limit=50&offset=0",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"sessions"
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "50"
+										},
+										{
+											"key": "offset",
+											"value": "0"
+										}
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": null
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "webhooks",
+			"item": [
+				{
+					"name": "{webhook_id}",
+					"item": [
+						{
+							"name": "Delete Webhook",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{bearerToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/webhooks/:webhook_id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"webhooks",
+										":webhook_id"
+									],
+									"variable": [
+										{
+											"key": "webhook_id",
+											"value": "6b8beed6-c85c-9de0-4616-158c1c441e57"
+										}
+									]
+								},
+								"description": "Removes a webhook configuration"
+							},
+							"response": [
+								{
+									"name": "Webhook deleted",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer <token>",
+												"description": "Added as a part of security scheme: bearer"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/webhooks/:webhook_id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"webhooks",
+												":webhook_id"
+											],
+											"variable": [
+												{
+													"key": "webhook_id",
+													"value": "6b8beed6-c85c-9de0-4616-158c1c441e57"
+												}
+											]
+										}
+									},
+									"status": "No Content",
+									"code": 204,
+									"_postman_previewlanguage": "text",
+									"header": [],
+									"cookie": [],
+									"body": null
+								},
+								{
+									"name": "401 response",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer <token>",
+												"description": "Added as a part of security scheme: bearer"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/webhooks/:webhook_id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"webhooks",
+												":webhook_id"
+											],
+											"variable": [
+												{
+													"key": "webhook_id",
+													"value": "6b8beed6-c85c-9de0-4616-158c1c441e57"
+												}
+											]
+										}
+									},
+									"status": "Unauthorized",
+									"code": 401,
+									"_postman_previewlanguage": "text",
+									"header": [],
+									"cookie": [],
+									"body": null
+								},
+								{
+									"name": "404 response",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer <token>",
+												"description": "Added as a part of security scheme: bearer"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/webhooks/:webhook_id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"webhooks",
+												":webhook_id"
+											],
+											"variable": [
+												{
+													"key": "webhook_id",
+													"value": "6b8beed6-c85c-9de0-4616-158c1c441e57"
+												}
+											]
+										}
+									},
+									"status": "Not Found",
+									"code": 404,
+									"_postman_previewlanguage": "text",
+									"header": [],
+									"cookie": [],
+									"body": null
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "List Webhooks",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/webhooks",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"webhooks"
+							]
+						},
+						"description": "Returns all webhooks configured for the authenticated user. Webhooks enable real-time notifications for clicks, conversions, and other events.\n"
+					},
+					"response": [
+						{
+							"name": "List of webhooks",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer <token>",
+										"description": "Added as a part of security scheme: bearer"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/webhooks",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"webhooks"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "[\n  {\n    \"id\": \"8af1cd81-07c4-5948-62b6-9d7e09d4aba6\",\n    \"url\": \"https://BMQUoPeKjYeKtYLAENUiy.lnLXXUEGv\",\n    \"events\": [\n      \"search\",\n      \"feedback\"\n    ],\n    \"created_at\": \"2024-03-10T11:35:51.347Z\",\n    \"last_triggered_at\": \"1973-07-15T07:34:24.716Z\",\n    \"status\": \"paused\"\n  },\n  {\n    \"id\": \"2ed5618c-5c86-6df8-5a6c-1fb9109a66cd\",\n    \"url\": \"https://nDWd.bayPEc6Ggz+LrEzgNnFANpN+WQbXE6ZaNa+h28WGNGYUsxcL2rP\",\n    \"events\": [\n      \"search\",\n      \"search\"\n    ],\n    \"created_at\": \"1982-08-19T12:08:22.421Z\",\n    \"last_triggered_at\": \"2016-01-16T11:43:43.306Z\",\n    \"status\": \"active\"\n  }\n]"
+						},
+						{
+							"name": "401 response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer <token>",
+										"description": "Added as a part of security scheme: bearer"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/webhooks",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"webhooks"
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": null
+						}
+					]
+				},
+				{
+					"name": "Create Webhook",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"url\": \"https://myapp.com/webhooks/ad-tokens\",\n  \"events\": [\n    \"feedback\",\n    \"search\"\n  ],\n  \"secret\": \"string\"\n}",
+							"options": {
+								"raw": {
+									"headerFamily": "json",
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/webhooks",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"webhooks"
+							]
+						},
+						"description": "Creates a webhook for real-time event notifications. Enterprise-grade feature that makes integration easier for high-volume developers.\n"
+					},
+					"response": [
+						{
+							"name": "Webhook created",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer <token>",
+										"description": "Added as a part of security scheme: bearer"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"url\": \"https://myapp.com/webhooks/ad-tokens\",\n  \"events\": [\n    \"feedback\",\n    \"search\"\n  ],\n  \"secret\": \"string\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/webhooks",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"webhooks"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"id\": \"7b07462a-4973-d862-3d67-fbf995fc87a6\",\n  \"url\": \"http://krcoExobkuumxOuPp.xlfeJcvB5MKnFoKbbepXECSRR9M+ILVMpyduE5QFyeX5Jsp2vur\",\n  \"events\": [\n    \"click\",\n    \"search\"\n  ],\n  \"created_at\": \"2009-02-04T13:48:04.796Z\",\n  \"last_triggered_at\": \"1973-12-20T22:29:53.646Z\",\n  \"status\": \"active\"\n}"
+						},
+						{
+							"name": "400 response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer <token>",
+										"description": "Added as a part of security scheme: bearer"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"url\": \"https://myapp.com/webhooks/ad-tokens\",\n  \"events\": [\n    \"feedback\",\n    \"search\"\n  ],\n  \"secret\": \"string\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/webhooks",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"webhooks"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": null
+						},
+						{
+							"name": "401 response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer <token>",
+										"description": "Added as a part of security scheme: bearer"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"url\": \"https://myapp.com/webhooks/ad-tokens\",\n  \"events\": [\n    \"feedback\",\n    \"search\"\n  ],\n  \"secret\": \"string\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/webhooks",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"webhooks"
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": null
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "analytics",
+			"item": [
+				{
+					"name": "performance",
+					"item": [
+						{
+							"name": "Get Performance Metrics",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{bearerToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/analytics/performance?start_date=1990-08-09T17:32:51.723Z&end_date=1990-08-09T17:32:51.723Z&timeframe=24h",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"analytics",
+										"performance"
+									],
+									"query": [
+										{
+											"key": "start_date",
+											"value": "1990-08-09T17:32:51.723Z",
+											"description": "Start of the time period (ISO 8601). Defaults based on timeframe."
+										},
+										{
+											"key": "end_date",
+											"value": "1990-08-09T17:32:51.723Z",
+											"description": "End of the time period (ISO 8601). Defaults to now."
+										},
+										{
+											"key": "timeframe",
+											"value": "24h",
+											"description": "Timeframe identifier. Determines time bucket size for request volume."
+										}
+									]
+								},
+								"description": "Returns performance metrics including request volume time-series, response time percentiles, and HTTP status code breakdown. Used for analytics charts and performance monitoring.\n"
+							},
+							"response": [
+								{
+									"name": "Performance metrics",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer <token>",
+												"description": "Added as a part of security scheme: bearer"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/analytics/performance?start_date=1990-08-09T17:32:51.723Z&end_date=1990-08-09T17:32:51.723Z&timeframe=24h",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"analytics",
+												"performance"
+											],
+											"query": [
+												{
+													"key": "start_date",
+													"value": "1990-08-09T17:32:51.723Z",
+													"description": "Start of the time period (ISO 8601). Defaults based on timeframe."
+												},
+												{
+													"key": "end_date",
+													"value": "1990-08-09T17:32:51.723Z",
+													"description": "End of the time period (ISO 8601). Defaults to now."
+												},
+												{
+													"key": "timeframe",
+													"value": "24h",
+													"description": "Timeframe identifier. Determines time bucket size for request volume."
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"period_start\": \"2020-04-14T23:10:39.492Z\",\n  \"period_end\": \"1966-12-08T00:44:39.421Z\",\n  \"timeframe\": \"30d\",\n  \"request_volume\": [\n    {\n      \"time\": \"1949-10-24T21:29:43.937Z\",\n      \"count\": 9336\n    },\n    {\n      \"time\": \"1967-03-11T00:00:45.672Z\",\n      \"count\": 5026\n    }\n  ],\n  \"response_time\": {\n    \"p50\": 8180.266655419315,\n    \"p95\": 2365.6584587006814,\n    \"p99\": 9327.172647330173\n  },\n  \"status_codes\": {\n    \"2xx\": 6922,\n    \"4xx\": 1150,\n    \"5xx\": 1465\n  }\n}"
+								},
+								{
+									"name": "401 response",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer <token>",
+												"description": "Added as a part of security scheme: bearer"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/analytics/performance?start_date=1990-08-09T17:32:51.723Z&end_date=1990-08-09T17:32:51.723Z&timeframe=24h",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"analytics",
+												"performance"
+											],
+											"query": [
+												{
+													"key": "start_date",
+													"value": "1990-08-09T17:32:51.723Z",
+													"description": "Start of the time period (ISO 8601). Defaults based on timeframe."
+												},
+												{
+													"key": "end_date",
+													"value": "1990-08-09T17:32:51.723Z",
+													"description": "End of the time period (ISO 8601). Defaults to now."
+												},
+												{
+													"key": "timeframe",
+													"value": "24h",
+													"description": "Timeframe identifier. Determines time bucket size for request volume."
+												}
+											]
+										}
+									},
+									"status": "Unauthorized",
+									"code": 401,
+									"_postman_previewlanguage": "text",
+									"header": [],
+									"cookie": [],
+									"body": null
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Get Analytics",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/analytics?start_date=1990-08-09T17:32:51.723Z&end_date=1990-08-09T17:32:51.723Z&metric=revenue",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"analytics"
+							],
+							"query": [
+								{
+									"key": "start_date",
+									"value": "1990-08-09T17:32:51.723Z"
+								},
+								{
+									"key": "end_date",
+									"value": "1990-08-09T17:32:51.723Z"
+								},
+								{
+									"key": "metric",
+									"value": "revenue",
+									"description": "Specific metric to retrieve"
+								}
+							]
+						},
+						"description": "Programmatic access to analytics data. Returns click-through rates, conversion rates, top-performing products, and more. Enables developers to build custom dashboards.\n"
+					},
+					"response": [
+						{
+							"name": "Analytics data",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer <token>",
+										"description": "Added as a part of security scheme: bearer"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/analytics?start_date=1990-08-09T17:32:51.723Z&end_date=1990-08-09T17:32:51.723Z&metric=revenue",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"analytics"
+									],
+									"query": [
+										{
+											"key": "start_date",
+											"value": "1990-08-09T17:32:51.723Z"
+										},
+										{
+											"key": "end_date",
+											"value": "1990-08-09T17:32:51.723Z"
+										},
+										{
+											"key": "metric",
+											"value": "revenue",
+											"description": "Specific metric to retrieve"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"period_start\": \"1974-06-06T12:06:04.906Z\",\n  \"period_end\": \"1961-01-09T13:05:54.974Z\",\n  \"metrics\": {\n    \"total_searches\": 4454,\n    \"total_clicks\": 9026,\n    \"click_through_rate\": 2191.720605881595,\n    \"total_conversions\": 8498,\n    \"conversion_rate\": 4452.547646157168,\n    \"total_revenue\": 7793.629094988221,\n    \"average_relevance_score\": 6351.940302671433\n  },\n  \"top_products\": [\n    {\n      \"product_id\": \"06dc4131-5145-dfbf-06aa-62a191f9f44e\",\n      \"title\": \"string\",\n      \"click_count\": 8692,\n      \"conversion_count\": 537,\n      \"revenue\": 9213.108597488183\n    },\n    {\n      \"product_id\": \"cac620d3-3508-cf8b-2160-c1d53bf86f7e\",\n      \"title\": \"string\",\n      \"click_count\": 7629,\n      \"conversion_count\": 4030,\n      \"revenue\": 546.2070038654975\n    }\n  ],\n  \"top_queries\": [\n    {\n      \"query\": \"string\",\n      \"search_count\": 8840,\n      \"avg_relevance_score\": 4257.675097059099\n    },\n    {\n      \"query\": \"string\",\n      \"search_count\": 5329,\n      \"avg_relevance_score\": 6175.709362838757\n    }\n  ]\n}"
+						},
+						{
+							"name": "401 response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer <token>",
+										"description": "Added as a part of security scheme: bearer"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/analytics?start_date=1990-08-09T17:32:51.723Z&end_date=1990-08-09T17:32:51.723Z&metric=revenue",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"analytics"
+									],
+									"query": [
+										{
+											"key": "start_date",
+											"value": "1990-08-09T17:32:51.723Z"
+										},
+										{
+											"key": "end_date",
+											"value": "1990-08-09T17:32:51.723Z"
+										},
+										{
+											"key": "metric",
+											"value": "revenue",
+											"description": "Specific metric to retrieve"
+										}
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": null
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "dashboard",
+			"item": [
+				{
+					"name": "stats",
+					"item": [
+						{
+							"name": "Get Dashboard Overview Statistics",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{bearerToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/dashboard/stats",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"dashboard",
+										"stats"
+									]
+								},
+								"description": "Returns dashboard overview statistics including total revenue, active API keys, and ad requests in the last 24 hours. Used for the main dashboard page.\n"
+							},
+							"response": [
+								{
+									"name": "Dashboard statistics",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer <token>",
+												"description": "Added as a part of security scheme: bearer"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/dashboard/stats",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"dashboard",
+												"stats"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"total_revenue\": 5776.82723210067,\n  \"active_api_keys\": 8793,\n  \"ad_requests_24h\": 7810\n}"
+								},
+								{
+									"name": "401 response",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer <token>",
+												"description": "Added as a part of security scheme: bearer"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/dashboard/stats",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"dashboard",
+												"stats"
+											]
+										}
+									},
+									"status": "Unauthorized",
+									"code": 401,
+									"_postman_previewlanguage": "text",
+									"header": [],
+									"cookie": [],
+									"body": null
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "logs",
+			"item": [
+				{
+					"name": "Get API Logs",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/logs?start_date=1990-08-09T17:32:51.723Z&end_date=1990-08-09T17:32:51.723Z&status_code=6754&method=PUT&endpoint=string&api_key_id=6b8beed6-c85c-9de0-4616-158c1c441e57&limit=50&offset=0",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"logs"
+							],
+							"query": [
+								{
+									"key": "start_date",
+									"value": "1990-08-09T17:32:51.723Z",
+									"description": "Start of the time period (ISO 8601). Optional."
+								},
+								{
+									"key": "end_date",
+									"value": "1990-08-09T17:32:51.723Z",
+									"description": "End of the time period (ISO 8601). Optional."
+								},
+								{
+									"key": "status_code",
+									"value": "6754",
+									"description": "Filter by specific HTTP status code (e.g., 200, 404, 500)"
+								},
+								{
+									"key": "method",
+									"value": "PUT",
+									"description": "Filter by HTTP method"
+								},
+								{
+									"key": "endpoint",
+									"value": "string",
+									"description": "Filter by endpoint path (case-insensitive partial match)"
+								},
+								{
+									"key": "api_key_id",
+									"value": "6b8beed6-c85c-9de0-4616-158c1c441e57",
+									"description": "Filter by specific API key ID"
+								},
+								{
+									"key": "limit",
+									"value": "50",
+									"description": "Maximum number of logs to return per page"
+								},
+								{
+									"key": "offset",
+									"value": "0",
+									"description": "Number of logs to skip for pagination"
+								}
+							]
+						},
+						"description": "Returns paginated API logs from search requests. Supports filtering by date range, status code, query text, and API key. Used for debugging and monitoring API usage.\n"
+					},
+					"response": [
+						{
+							"name": "API logs response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer <token>",
+										"description": "Added as a part of security scheme: bearer"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/logs?start_date=1990-08-09T17:32:51.723Z&end_date=1990-08-09T17:32:51.723Z&status_code=6754&method=PUT&endpoint=string&api_key_id=6b8beed6-c85c-9de0-4616-158c1c441e57&limit=50&offset=0",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"logs"
+									],
+									"query": [
+										{
+											"key": "start_date",
+											"value": "1990-08-09T17:32:51.723Z",
+											"description": "Start of the time period (ISO 8601). Optional."
+										},
+										{
+											"key": "end_date",
+											"value": "1990-08-09T17:32:51.723Z",
+											"description": "End of the time period (ISO 8601). Optional."
+										},
+										{
+											"key": "status_code",
+											"value": "6754",
+											"description": "Filter by specific HTTP status code (e.g., 200, 404, 500)"
+										},
+										{
+											"key": "method",
+											"value": "PUT",
+											"description": "Filter by HTTP method"
+										},
+										{
+											"key": "endpoint",
+											"value": "string",
+											"description": "Filter by endpoint path (case-insensitive partial match)"
+										},
+										{
+											"key": "api_key_id",
+											"value": "6b8beed6-c85c-9de0-4616-158c1c441e57",
+											"description": "Filter by specific API key ID"
+										},
+										{
+											"key": "limit",
+											"value": "50",
+											"description": "Maximum number of logs to return per page"
+										},
+										{
+											"key": "offset",
+											"value": "0",
+											"description": "Number of logs to skip for pagination"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "X-Total-Count",
+									"value": "6754",
+									"description": {
+										"content": "Total number of logs matching the filters",
+										"type": "text/plain"
+									}
+								},
+								{
+									"key": "Link",
+									"value": "string",
+									"description": {
+										"content": "RFC 5988 Link header for pagination",
+										"type": "text/plain"
+									}
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"logs\": [\n    {\n      \"id\": \"6328a9a8-f079-0192-50dd-5aae6e2dff53\",\n      \"request_id\": \"5d3ddc96-5a45-d8d7-b8e0-4e7dc5e459df\",\n      \"user_id\": \"393a20dd-c34c-3536-7821-8b35740368a0\",\n      \"api_key_id\": \"5f0d8b96-38ac-2b21-239f-95e07446b85d\",\n      \"api_key_name\": \"string\",\n      \"api_key_prefix\": \"string\",\n      \"method\": \"POST\",\n      \"endpoint\": \"/search\",\n      \"status_code\": 200,\n      \"response_time_ms\": 6154.735575412782,\n      \"request_body\": {},\n      \"response_body\": {},\n      \"request_headers\": {},\n      \"query_params\": {},\n      \"client_ip\": \"string\",\n      \"user_agent\": \"string\",\n      \"error_message\": \"string\",\n      \"created_at\": \"2023-04-21T06:34:51.265Z\"\n    },\n    {\n      \"id\": \"733d3d24-98e8-8c11-47f7-435ebd6e2624\",\n      \"request_id\": \"8a8da46a-8912-f061-3eec-47d6f0599f5f\",\n      \"user_id\": \"95dd467b-6aab-9d0f-cdec-6c94c8372c99\",\n      \"api_key_id\": \"20b8ba76-af7c-c87d-4e12-080c555cdc39\",\n      \"api_key_name\": \"string\",\n      \"api_key_prefix\": \"string\",\n      \"method\": \"POST\",\n      \"endpoint\": \"/search\",\n      \"status_code\": 200,\n      \"response_time_ms\": 9604.928441148035,\n      \"request_body\": {},\n      \"response_body\": {},\n      \"request_headers\": {},\n      \"query_params\": {},\n      \"client_ip\": \"string\",\n      \"user_agent\": \"string\",\n      \"error_message\": \"string\",\n      \"created_at\": \"1985-08-21T06:00:25.881Z\"\n    }\n  ],\n  \"total\": 14,\n  \"limit\": 3424,\n  \"offset\": 5927\n}"
+						},
+						{
+							"name": "400 response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer <token>",
+										"description": "Added as a part of security scheme: bearer"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/logs?start_date=1990-08-09T17:32:51.723Z&end_date=1990-08-09T17:32:51.723Z&status_code=6754&method=PUT&endpoint=string&api_key_id=6b8beed6-c85c-9de0-4616-158c1c441e57&limit=50&offset=0",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"logs"
+									],
+									"query": [
+										{
+											"key": "start_date",
+											"value": "1990-08-09T17:32:51.723Z",
+											"description": "Start of the time period (ISO 8601). Optional."
+										},
+										{
+											"key": "end_date",
+											"value": "1990-08-09T17:32:51.723Z",
+											"description": "End of the time period (ISO 8601). Optional."
+										},
+										{
+											"key": "status_code",
+											"value": "6754",
+											"description": "Filter by specific HTTP status code (e.g., 200, 404, 500)"
+										},
+										{
+											"key": "method",
+											"value": "PUT",
+											"description": "Filter by HTTP method"
+										},
+										{
+											"key": "endpoint",
+											"value": "string",
+											"description": "Filter by endpoint path (case-insensitive partial match)"
+										},
+										{
+											"key": "api_key_id",
+											"value": "6b8beed6-c85c-9de0-4616-158c1c441e57",
+											"description": "Filter by specific API key ID"
+										},
+										{
+											"key": "limit",
+											"value": "50",
+											"description": "Maximum number of logs to return per page"
+										},
+										{
+											"key": "offset",
+											"value": "0",
+											"description": "Number of logs to skip for pagination"
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": null
+						},
+						{
+							"name": "401 response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer <token>",
+										"description": "Added as a part of security scheme: bearer"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/logs?start_date=1990-08-09T17:32:51.723Z&end_date=1990-08-09T17:32:51.723Z&status_code=6754&method=PUT&endpoint=string&api_key_id=6b8beed6-c85c-9de0-4616-158c1c441e57&limit=50&offset=0",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"logs"
+									],
+									"query": [
+										{
+											"key": "start_date",
+											"value": "1990-08-09T17:32:51.723Z",
+											"description": "Start of the time period (ISO 8601). Optional."
+										},
+										{
+											"key": "end_date",
+											"value": "1990-08-09T17:32:51.723Z",
+											"description": "End of the time period (ISO 8601). Optional."
+										},
+										{
+											"key": "status_code",
+											"value": "6754",
+											"description": "Filter by specific HTTP status code (e.g., 200, 404, 500)"
+										},
+										{
+											"key": "method",
+											"value": "PUT",
+											"description": "Filter by HTTP method"
+										},
+										{
+											"key": "endpoint",
+											"value": "string",
+											"description": "Filter by endpoint path (case-insensitive partial match)"
+										},
+										{
+											"key": "api_key_id",
+											"value": "6b8beed6-c85c-9de0-4616-158c1c441e57",
+											"description": "Filter by specific API key ID"
+										},
+										{
+											"key": "limit",
+											"value": "50",
+											"description": "Maximum number of logs to return per page"
+										},
+										{
+											"key": "offset",
+											"value": "0",
+											"description": "Number of logs to skip for pagination"
+										}
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": null
+						}
+					]
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "apikey",
+		"apikey": [
+			{
+				"key": "key",
+				"value": "x-api-key",
+				"type": "string"
+			},
+			{
+				"key": "value",
+				"value": "{{apiKey}}",
+				"type": "string"
+			},
+			{
+				"key": "in",
+				"value": "header",
+				"type": "string"
+			}
+		]
+	},
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "https://api.ad-tokens.com"
+		}
+	]
+}

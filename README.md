@@ -14,7 +14,7 @@ AI agents and LLM applications need a way to monetize without breaking the user 
 
 ## Key Features
 
-- 🚀 **High-Performance RAG Engine**: Vector search powered by LanceDB Cloud with sub-100ms response times
+- 🚀 **High-Performance RAG Engine**: Vector search powered by LanceDB Cloud with sub-0ms response times
 - 🤖 **Agent-Optimized**: Designed for seamless integration with AI agents and LLM workflows
 - 🔐 **Developer-First Security**: API key management, JWT authentication, and request attribution
 - 📊 **Built-in Analytics**: Request tracking, attribution, and performance metrics
@@ -25,7 +25,7 @@ AI agents and LLM applications need a way to monetize without breaking the user 
 ## Use Cases
 
 ### AI Agents & Autonomous Systems
-Integrate contextual product recommendations into your AI agent's responses. Perfect for:
+Integrate contextual productions into your AI agent's responses. Perfect for:
 - Customer service bots that can suggest relevant products
 - Personal shopping assistants
 - Travel planning agents
@@ -124,9 +124,7 @@ curl -X POST https://api.ad-tokens.com/search \
 - 💡 [Best Practices](docs/best-practices.md) - Performance tips and patterns
 - ❓ [FAQ](docs/faq.md) - Common questions answered
 
-## Code Examples
-
-We provide working examples in multiple languages:
+## Code Examplee working examples in multiple languages:
 
 - [Python Examples](examples/python/) - Complete Python integration examples
 - [JavaScript Examples](examples/javascript/) - Browser and Node.js examples
@@ -162,3 +160,4 @@ This project is licensed under a proprieatary license - see the [LICENSE](LICENS
 **Made for developers building the future of AI agents** 🤖
 
 Get started today: [https://www.ad-tokens.com](https://www.ad-tokens.com)
+
