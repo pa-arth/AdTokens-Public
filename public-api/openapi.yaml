@@ -1,0 +1,1789 @@
+openapi: 3.0.3
+info:
+  title: Ad-Tokens API
+  version: 1.0.0
+  description: >
+    The monetization layer for the Agentic Era. 
+    Ad-Tokens provides RAG-powered contextual commerce injection for AI agents and LLM applications.
+  contact:
+    name: Ad-Tokens Support
+    url: https://ad-tokens.com/support
+    email: hello@ad-tokens.com
+
+servers:
+  - url: https://api.ad-tokens.com
+    description: Production API
+  - url: http://localhost:8080
+    description: Local Development
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-api-key
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Supabase JWT token for user authentication
+    CookieAuth:
+      type: apiKey
+      in: cookie
+      name: session
+      description: HttpOnly session cookie (set automatically after login)
+  parameters:
+    ApiVersion:
+      name: API-Version
+      in: header
+      required: false
+      schema:
+        type: string
+        default: "2024-01-15"
+        pattern: "^\\d{4}-\\d{2}-\\d{2}$"
+      description: >
+        API version in date format (YYYY-MM-DD). Defaults to latest stable version.
+        Header-based versioning allows cleaner URLs and easier version management.
+
+  schemas:
+    AdResponse:
+      type: object
+      properties:
+        product_id:
+          type: string
+          format: uuid
+          description: >
+            The product identifier. Persistent across all impressions of the same product.
+            Use this for operations like finding similar products or excluding products from results.
+        impression_id:
+          type: string
+          format: uuid
+          description: Unique identifier for this ad impression. Required for attribution tracking (Skimlinks/Amazon compliance).
+        title:
+          type: string
+          example: "Sony WH-1000XM5 Noise Canceling Headphones"
+        description:
+          type: string
+          example: "Top-tier noise cancellation and 30-hour battery life."
+        url:
+          type: string
+          format: uri
+          example: "https://ad-tokens.com/p/12345"
+        price:
+          type: string
+          example: "$348.00"
+        merchant:
+          type: string
+          example: "Amazon"
+          description: The retailer/merchant selling the product (e.g., "Amazon", "Best Buy")
+        brand:
+          type: string
+          example: "Sony"
+          description: >
+            The product brand/manufacturer (e.g., "Sony", "Apple", "Nike"). 
+            Often more important than merchant for filtering and user preferences in retail contexts.
+        relevance_score:
+          type: number
+          format: float
+          example: 0.98
+        relevance_explanation:
+          type: string
+          description: Human-readable explanation of why this ad was matched. Helps AI agents explain recommendations to users.
+          example: "Matched because you mentioned 'podcasting' and this is a top-rated XLR microphone with excellent audio quality."
+        currency:
+          type: string
+          example: "USD"
+        last_updated_at:
+          type: string
+          format: date-time
+          description: Timestamp when the product data (price, availability) was last updated. Helps determine data freshness for Amazon compliance.
+          example: "2024-01-15T10:30:00Z"
+        image_url:
+          type: string
+          format: uri
+          description: Product image URL for visual display in LLM responses
+          example: "https://images.amazon.com/products/12345.jpg"
+        # review_count:
+        #   type: integer
+        #   description: Number of reviews
+        #   example: 1234
+        # in_stock:
+        #   type: boolean
+        #   description: Product availability status
+        #   example: true
+        disclosure_text:
+          type: string
+          nullable: true
+          description: Affiliate disclosure text for compliance (e.g., "As an Amazon Associate, we earn from qualifying purchases.")
+          example: "As an Amazon Associate, we earn from qualifying purchases."
+
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+
+    LoginRequest:
+      type: object
+      properties:
+        token:
+          type: string
+          nullable: true
+          description: Optional Supabase JWT token. If not provided, token must be in Authorization header.
+      description: Request schema for login endpoint. JWT token is typically provided in Authorization header.
+
+    LoginResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Login successful"
+        user_id:
+          type: string
+          format: uuid
+          description: Authenticated user ID
+
+    LogoutResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Logout successful"
+
+    UserResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: User ID (UUID)
+        email:
+          type: string
+          nullable: true
+          description: User email address
+        metadata:
+          type: object
+          description: User metadata
+          additionalProperties: true
+
+    ApiKey:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          example: "Hugging Face Bot Key"
+        prefix:
+          type: string
+          example: "at_live_"
+        created_at:
+          type: string
+          format: date-time
+        last_used_at:
+          type: string
+          format: date-time
+          nullable: true
+          description: Timestamp of last API call using this key. Null if never used.
+        status:
+          type: string
+          enum: [active, revoked]
+          default: active
+          description: Status of the API key. 'active' keys can be used for authentication, 'revoked' keys cannot.
+
+    SearchRequest:
+      type: object
+      required:
+        - query
+      properties:
+        query:
+          type: string
+          description: >
+            The natural language context or user query. 
+            **IMPORTANT: Do not include PII (Personally Identifiable Information)** such as names, 
+            email addresses, phone numbers, or specific user identifiers. Only include intent and context.
+          example: "I need a high-quality microphone for recording podcasts."
+        limit:
+          type: integer
+          default: 3
+          minimum: 1
+          maximum: 10
+          description: Maximum number of results to return
+        stream:
+          type: boolean
+          default: false
+          description: >
+            If true, returns Server-Sent Events (SSE) stream. If false, returns standard JSON response.
+            Modern unified approach - same endpoint handles both streaming and non-streaming requests.
+        filters:
+          type: object
+          description: Consolidated filter object for cleaner, more extensible filtering
+          properties:
+            min_price:
+              type: number
+              format: float
+              description: Minimum price filter (in USD)
+              example: 50.0
+            max_price:
+              type: number
+              format: float
+              description: Maximum price filter (in USD)
+              example: 500.0
+            merchant:
+              type: string
+              description: Filter by merchant/retailer name (e.g., "Amazon", "Best Buy")
+              example: "Amazon"
+            brand:
+              type: string
+              description: Filter by product brand/manufacturer (e.g., "Sony", "Apple", "Nike"). Often more important than merchant for user preferences.
+              example: "Sony"
+            category:
+              type: string
+              description: Filter by product category
+              example: "Electronics"
+            keyword_filter:
+              type: string
+              description: >
+                Strict keyword filter for hybrid search. LanceDB performs vector similarity search,
+                but results are filtered to only include products containing this exact keyword (e.g., brand name "Sony").
+                Useful when you need semantic matching but require a specific brand or term.
+              example: "Sony"
+        sort:
+          type: string
+          enum: [relevance, price_asc, price_desc]
+          default: relevance
+          description: Sort order for results
+        min_relevance_score:
+          type: number
+          format: float
+          default: 0.5
+          minimum: 0.0
+          maximum: 1.0
+          description: >
+            Minimum relevance score threshold. Products with scores below this value will be excluded from results.
+            Defaults to 0.5. Set to 0.0 to disable filtering.
+          example: 0.7
+        session_id:
+          type: string
+          format: uuid
+          description: >
+            Optional session identifier for conversation-aware search. When provided, the API uses
+            conversation history to improve relevance. Creates a data moat by learning from user intent patterns.
+            **IMPORTANT: Session IDs should be anonymous identifiers, not tied to PII.**
+          example: "550e8400-e29b-41d4-a716-446655440000"
+        conversation_context:
+          type: array
+          items:
+            type: object
+            properties:
+              role:
+                type: string
+                enum: [user, assistant, system]
+              content:
+                type: string
+          description: >
+            Optional conversation history for context-aware matching. Helps understand user intent
+            across multiple turns. Maximum 10 messages to keep latency low.
+            **IMPORTANT: Do not include PII** (names, email addresses, phone numbers, etc.) in conversation content.
+            Only include intent, preferences, and product-related context.
+          example:
+            - role: "user"
+              content: "I'm looking for a microphone"
+            - role: "assistant"
+              content: "What will you be using it for?"
+            - role: "user"
+              content: "Recording podcasts"
+        tool_definition:
+          type: object
+          description: >
+            Tool definition object that LLMs can directly ingest for tool calling. Provides a complete
+            function/tool schema that models can use to understand how to work with ad results.
+            If provided, the response will include a tool_definition in metadata that the model can use.
+          properties:
+            format:
+              type: string
+              enum: [openai_function, anthropic_tool, json_schema]
+              default: json_schema
+              description: >
+                Format of the tool definition. `openai_function` for OpenAI Function Calling,
+                `anthropic_tool` for Claude Tool Use, `json_schema` for standard JSON Schema.
+            include_examples:
+              type: boolean
+              default: true
+              description: Whether to include example values in the tool definition
+        exclude_product_ids:
+          type: array
+          items:
+            type: string
+            format: uuid
+          description: >
+            Exclude specific product IDs from results. Useful for avoiding duplicate recommendations
+            in the same conversation or implementing "show different products" logic.
+        experiment_id:
+          type: string
+          description: >
+            Optional A/B testing experiment identifier. Allows developers to test different
+            ranking strategies or search parameters. Results are tracked separately for analytics.
+        metadata:
+          type: object
+          additionalProperties: true
+          description: >
+            Optional key-value map for developer's internal tracking. Useful for passing 
+            non-PII identifiers like internal request IDs, feature flags, or custom tags.
+            **IMPORTANT: Do not include PII** (names, emails, phone numbers, etc.) in this object.
+          example:
+            internal_request_id: "req_abc123"
+            feature_flag: "new_search_v2"
+            deployment_env: "production"
+
+    SearchResponse:
+      type: object
+      properties:
+        request_id:
+          type: string
+          format: uuid
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/AdResponse'
+        metadata:
+          type: object
+          properties:
+            total_matches:
+              type: integer
+              description: Total number of matches found before applying limit
+            session_id:
+              type: string
+              format: uuid
+              description: >
+                Session ID for this search. Use this in subsequent requests to maintain conversation context.
+                If not provided in request, a new session is created.
+            model_version:
+              type: string
+              description: Version of the embedding model used (e.g., "text-embedding-3-small-v1")
+            tool_definition:
+              type: object
+              description: >
+                Tool definition for LLM tool calling. Only included if `tool_definition` was requested
+                in the search request. Contains a complete function/tool schema that models can directly use.
+              properties:
+                name:
+                  type: string
+                  example: "get_product_recommendations"
+                description:
+                  type: string
+                  example: "Returns contextual product recommendations based on user intent"
+                parameters:
+                  type: object
+                  description: JSON Schema for the tool parameters
+                format:
+                  type: string
+                  enum: [openai_function, anthropic_tool, json_schema]
+                  description: Format of the tool definition
+
+    Usage:
+      type: object
+      properties:
+        period_start:
+          type: string
+          format: date-time
+        period_end:
+          type: string
+          format: date-time
+        total_requests:
+          type: integer
+          description: Total API requests made in the period
+        search_queries:
+          type: integer
+          description: Number of search queries executed
+        rate_limit:
+          type: object
+          properties:
+            limit:
+              type: integer
+            remaining:
+              type: integer
+            reset_at:
+              type: string
+              format: date-time
+
+    HealthCheck:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [ok, degraded, down]
+        timestamp:
+          type: string
+          format: date-time
+        dependencies:
+          type: object
+          properties:
+            lancedb:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum: [healthy, unhealthy]
+                latency_ms:
+                  type: number
+                  format: float
+            openai:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum: [healthy, unhealthy]
+                latency_ms:
+                  type: number
+                  format: float
+
+    ClickTracking:
+      type: object
+      required:
+        - impression_id
+      properties:
+        impression_id:
+          type: string
+          format: uuid
+          description: >
+            The impression_id from the AdResponse. Required for precise attribution tracking 
+            (Skimlinks/Amazon compliance). Uniquely identifies the specific product impression that was clicked.
+        product_id:
+          type: string
+          format: uuid
+          description: The product ID (derived from impression_id)
+        request_id:
+          type: string
+          format: uuid
+          description: Optional. The request_id from the original search response (for reference)
+        timestamp:
+          type: string
+          format: date-time
+          description: When the click occurred
+        user_agent:
+          type: string
+          description: Optional user agent string for analytics
+        conversion_value:
+          type: number
+          format: float
+          description: Optional conversion value if purchase occurred (for revenue tracking)
+
+    Webhook:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        url:
+          type: string
+          format: uri
+        events:
+          type: array
+          items:
+            type: string
+            enum: [click, conversion, search, feedback]
+        created_at:
+          type: string
+          format: date-time
+        last_triggered_at:
+          type: string
+          format: date-time
+          nullable: true
+        status:
+          type: string
+          enum: [active, paused, failed]
+          description: Webhook delivery status
+
+    Analytics:
+      type: object
+      properties:
+        period_start:
+          type: string
+          format: date-time
+        period_end:
+          type: string
+          format: date-time
+        metrics:
+          type: object
+          properties:
+            total_searches:
+              type: integer
+            total_clicks:
+              type: integer
+            click_through_rate:
+              type: number
+              format: float
+              description: CTR as a percentage (e.g., 2.5 for 2.5%)
+            total_conversions:
+              type: integer
+            conversion_rate:
+              type: number
+              format: float
+            total_revenue:
+              type: number
+              format: float
+              description: Total revenue from conversions (in USD)
+            average_relevance_score:
+              type: number
+              format: float
+        top_products:
+          type: array
+          items:
+            type: object
+            properties:
+              product_id:
+                type: string
+                format: uuid
+              title:
+                type: string
+              click_count:
+                type: integer
+              conversion_count:
+                type: integer
+              revenue:
+                type: number
+                format: float
+        top_queries:
+          type: array
+          items:
+            type: object
+            properties:
+              query:
+                type: string
+              search_count:
+                type: integer
+              avg_relevance_score:
+                type: number
+                format: float
+
+    DashboardStats:
+      type: object
+      properties:
+        total_revenue:
+          type: number
+          format: float
+          description: Total revenue from all conversions (USD)
+        active_api_keys:
+          type: integer
+          description: Number of active API keys
+        ad_requests_24h:
+          type: integer
+          description: Number of ad requests in last 24 hours
+
+    RequestVolumeDataPoint:
+      type: object
+      properties:
+        time:
+          type: string
+          format: date-time
+          description: Timestamp for this data point
+        count:
+          type: integer
+          description: Number of requests in this time bucket
+
+    ResponseTimeMetrics:
+      type: object
+      properties:
+        p50:
+          type: number
+          format: float
+          description: 50th percentile response time (ms)
+        p95:
+          type: number
+          format: float
+          description: 95th percentile response time (ms)
+        p99:
+          type: number
+          format: float
+          description: 99th percentile response time (ms)
+
+    StatusCodeBreakdown:
+      type: object
+      properties:
+        "2xx":
+          type: integer
+          description: Number of 2xx responses
+        "4xx":
+          type: integer
+          description: Number of 4xx responses
+        "5xx":
+          type: integer
+          description: Number of 5xx responses
+
+    PerformanceMetrics:
+      type: object
+      properties:
+        period_start:
+          type: string
+          format: date-time
+        period_end:
+          type: string
+          format: date-time
+        timeframe:
+          type: string
+          enum: [1h, 24h, 7d, 30d]
+          description: Timeframe identifier
+        request_volume:
+          type: array
+          items:
+            $ref: '#/components/schemas/RequestVolumeDataPoint'
+          description: Time-series request volume data
+        response_time:
+          $ref: '#/components/schemas/ResponseTimeMetrics'
+        status_codes:
+          $ref: '#/components/schemas/StatusCodeBreakdown'
+
+    ApiLog:
+      type: object
+      description: Individual API log entry from api_logs table
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Log entry ID
+        request_id:
+          type: string
+          format: uuid
+          description: Unique request identifier (correlation ID)
+        user_id:
+          type: string
+          format: uuid
+          nullable: true
+          description: User ID if authenticated
+        api_key_id:
+          type: string
+          format: uuid
+          nullable: true
+          description: API key used for this request (if API key auth)
+        api_key_name:
+          type: string
+          nullable: true
+          description: Name of the API key (for display)
+        api_key_prefix:
+          type: string
+          nullable: true
+          description: Prefix of the API key (for display)
+        method:
+          type: string
+          description: HTTP method (GET, POST, PUT, DELETE, etc.)
+          example: "POST"
+        endpoint:
+          type: string
+          description: Request path/endpoint
+          example: "/search"
+        status_code:
+          type: integer
+          description: HTTP status code
+          example: 200
+        response_time_ms:
+          type: number
+          format: float
+          description: Total response time in milliseconds
+        request_body:
+          type: object
+          nullable: true
+          description: Request body (sanitized JSON)
+        response_body:
+          type: object
+          nullable: true
+          description: Response body (sanitized JSON, may be truncated)
+        request_headers:
+          type: object
+          nullable: true
+          description: Request headers (sanitized, sensitive data removed)
+        query_params:
+          type: object
+          nullable: true
+          description: Query parameters
+        client_ip:
+          type: string
+          nullable: true
+          description: Client IP address
+        user_agent:
+          type: string
+          nullable: true
+          description: User agent string
+        error_message:
+          type: string
+          nullable: true
+          description: Error message if request failed
+        created_at:
+          type: string
+          format: date-time
+          description: Timestamp when the request was made
+
+    ApiLogsResponse:
+      type: object
+      description: Paginated API logs response
+      properties:
+        logs:
+          type: array
+          items:
+            $ref: '#/components/schemas/ApiLog'
+          description: Array of log entries
+        total:
+          type: integer
+          description: Total number of logs matching the filters
+        limit:
+          type: integer
+          description: Maximum number of logs per page
+        offset:
+          type: integer
+          description: Number of logs skipped
+
+security:
+  - ApiKeyAuth: []
+
+paths:
+  /auth/login:
+    post:
+      tags:
+        - Authentication
+      summary: Login with Supabase JWT
+      description: >
+        Login with a Supabase JWT token (provided in Authorization header as Bearer token).
+        Validates the JWT, creates a session, and sets an HttpOnly session cookie.
+        The cookie is automatically sent with subsequent requests.
+      operationId: login
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Login successful, session cookie set
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '401':
+          description: Unauthorized - Invalid or expired JWT token
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /auth/logout:
+    post:
+      tags:
+        - Authentication
+      summary: Logout and revoke session
+      description: >
+        Logout and revoke the current session. Clears the session cookie.
+        No authentication required - uses session cookie if present.
+      operationId: logout
+      responses:
+        '200':
+          description: Logout successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LogoutResponse'
+
+  /auth/me:
+    get:
+      tags:
+        - Authentication
+      summary: Get current user
+      description: >
+        Get the current authenticated user from session cookie.
+        Returns user information based on the session cookie.
+        Used by frontend to check authentication status and get user data.
+      operationId: get_current_user
+      security:
+        - CookieAuth: []
+      responses:
+        '200':
+          description: Current user information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '401':
+          description: Unauthorized - Invalid or expired session
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /search:
+    post:
+      tags:
+        - Ad Engine
+      summary: Contextual Ad Search (RAG)
+      description: >
+        Takes a user prompt or agent context, generates an embedding, 
+        and performs a vector search against LanceDB Cloud to return the most relevant products.
+        API versioning is handled via the `API-Version` header (defaults to latest).
+        Supports both streaming (SSE) and non-streaming responses via the `stream` flag in the request body.
+      operationId: search_ads
+      parameters:
+        - $ref: '#/components/parameters/ApiVersion'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchRequest'
+      responses:
+        '200':
+          description: Successful search results (JSON or SSE stream based on `stream` flag)
+          headers:
+            X-RateLimit-Limit:
+              description: The number of requests allowed per time window
+              schema:
+                type: integer
+                example: 1000
+            X-RateLimit-Remaining:
+              description: The number of requests remaining in the current time window
+              schema:
+                type: integer
+                example: 987
+            X-RateLimit-Reset:
+              description: Unix timestamp when the rate limit window resets
+              schema:
+                type: integer
+                example: 1704067200
+            X-Search-Time:
+              description: Total search time in milliseconds (LanceDB vector search)
+              schema:
+                type: number
+                format: float
+                example: 45.2
+            X-Embedding-Time:
+              description: Time taken to generate embedding in milliseconds
+              schema:
+                type: number
+                format: float
+                example: 12.5
+            X-Cache-Hit:
+              description: Whether the result was served from cache (true/false)
+              schema:
+                type: string
+                enum: [true, false]
+                example: "false"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchResponse'
+              description: "Standard JSON response when `stream: false`"
+            text/event-stream:
+              schema:
+                type: string
+                description: "Server-Sent Events stream when `stream: true`"
+              description: "SSE stream when `stream: true`. Format: `event: result\ndata: {...}\n\n`"
+        '400':
+          description: Bad Request
+          $ref: '#/components/responses/BadRequestError'
+        '401':
+          description: Unauthorized
+          $ref: '#/components/responses/UnauthorizedError'
+        '429':
+          description: Rate Limit Exceeded
+          $ref: '#/components/responses/RateLimitError'
+        '500':
+          description: Internal Server Error
+          $ref: '#/components/responses/InternalServerError'
+        '503':
+          description: Service Unavailable
+          $ref: '#/components/responses/ServiceUnavailableError'
+
+  /keys:
+    get:
+      tags:
+        - Developer Portal
+      summary: List API Keys
+      description: >
+        Returns API keys associated with the authenticated user (via Supabase).
+        Results are paginated for professional tooling compatibility.
+      operationId: list_api_keys
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 50
+            minimum: 1
+            maximum: 100
+          description: Maximum number of keys to return per page
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+            minimum: 0
+          description: Number of keys to skip for pagination
+      responses:
+        '200':
+          description: Paginated list of keys
+          headers:
+            Link:
+              description: >
+                Standard HTTP Link header for pagination. Contains `rel="next"`, `rel="prev"`, 
+                `rel="first"`, and `rel="last"` links when applicable. Follows RFC 5988.
+                Links use relative paths and should be resolved against the request URL.
+              schema:
+                type: string
+                example: '</keys?limit=50&offset=50>; rel="next", </keys?limit=50&offset=0>; rel="first"'
+            X-Total-Count:
+              description: Total number of keys available
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiKey'
+        '401':
+          description: Unauthorized
+          $ref: '#/components/responses/UnauthorizedError'
+
+    post:
+      tags:
+        - Developer Portal
+      summary: Create API Key
+      description: Generates a new scoped API key for agent integration.
+      operationId: create_api_key
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+              properties:
+                name:
+                  type: string
+                  minLength: 1
+                  description: Human-readable name for the API key. Cannot be empty.
+                  example: "Production Bot"
+      responses:
+        '201':
+          description: Key created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  key:
+                    type: string
+                    description: The full API key (only shown once).
+                  metadata:
+                    $ref: '#/components/schemas/ApiKey'
+        '401':
+          description: Unauthorized
+          $ref: '#/components/responses/UnauthorizedError'
+        '400':
+          description: Bad Request
+          $ref: '#/components/responses/BadRequestError'
+
+  /keys/{key_id}:
+    delete:
+      tags:
+        - Developer Portal
+      summary: Delete API Key
+      description: Revokes and deletes an API key. This action cannot be undone.
+      operationId: delete_api_key
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: key_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: The ID of the API key to delete
+      responses:
+        '204':
+          description: Key successfully deleted
+        '401':
+          description: Unauthorized
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          description: Key not found
+          $ref: '#/components/responses/NotFoundError'
+
+    post:
+      tags:
+        - Developer Portal
+      summary: Revoke API Key
+      description: >
+        Revokes an API key without deleting it. The key will no longer be usable for authentication,
+        but it will remain in the system for audit purposes. This is useful when you want to disable
+        a key temporarily or keep a record of revoked keys.
+      operationId: revoke_api_key
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: key_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: The ID of the API key to revoke
+      responses:
+        '200':
+          description: Key successfully revoked
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiKey'
+        '401':
+          description: Unauthorized
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          description: Key not found
+          $ref: '#/components/responses/NotFoundError'
+
+  /keys/{key_id}/rotate:
+    post:
+      tags:
+        - Developer Portal
+      summary: Rotate API Key
+      description: >
+        Generates a new API key to replace an existing one. The old key is automatically revoked,
+        and a new key is returned. This is useful for key rotation as a security best practice.
+        The new key is shown only once in the response - store it securely.
+      operationId: rotate_api_key
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: key_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: The ID of the API key to rotate
+      responses:
+        '200':
+          description: Key successfully rotated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  key:
+                    type: string
+                    description: The new full API key (only shown once)
+                  metadata:
+                    $ref: '#/components/schemas/ApiKey'
+        '401':
+          description: Unauthorized
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          description: Key not found
+          $ref: '#/components/responses/NotFoundError'
+        '400':
+          description: Bad Request
+          $ref: '#/components/responses/BadRequestError'
+
+  /health:
+    get:
+      tags:
+        - Infrastructure
+      summary: Health Check
+      description: Returns the health status of the service and its dependencies (LanceDB, OpenAI).
+      operationId: health_check
+      security: []
+      responses:
+        '200':
+          description: Service health status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthCheck'
+        '503':
+          description: Service Unavailable
+          $ref: '#/components/responses/ServiceUnavailableError'
+
+  /usage:
+    get:
+      tags:
+        - Developer Portal
+      summary: Get Usage Statistics
+      description: Returns usage statistics for the authenticated user's API keys.
+      operationId: get_usage
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: start_date
+          in: query
+          schema:
+            type: string
+            format: date-time
+          description: Start of the time period (ISO 8601). Defaults to 30 days ago.
+        - name: end_date
+          in: query
+          schema:
+            type: string
+            format: date-time
+          description: End of the time period (ISO 8601). Defaults to now.
+      responses:
+        '200':
+          description: Usage statistics
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Usage'
+        '401':
+          description: Unauthorized
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /search/batch:
+    post:
+      tags:
+        - Ad Engine
+      summary: Batch Ad Search
+      description: >
+        Process multiple search queries in a single request. More efficient than multiple sequential calls.
+        Useful for agents that need to search for multiple product categories simultaneously.
+      operationId: batch_search_ads
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - queries
+              properties:
+                queries:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/SearchRequest'
+                  minItems: 1
+                  maxItems: 10
+                  description: Array of search queries to process
+      responses:
+        '200':
+          description: Batch search results
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/SearchResponse'
+                  metadata:
+                    type: object
+                    properties:
+                      total_queries:
+                        type: integer
+                      total_time_ms:
+                        type: number
+                        format: float
+        '400':
+          description: Bad Request
+          $ref: '#/components/responses/BadRequestError'
+        '401':
+          description: Unauthorized
+          $ref: '#/components/responses/UnauthorizedError'
+        '429':
+          description: Rate Limit Exceeded
+          $ref: '#/components/responses/RateLimitError'
+
+  /products/{product_id}/similar:
+    get:
+      tags:
+        - Ad Engine
+      summary: Get Similar Products
+      description: >
+        Returns products similar to a given product. Uses vector similarity and collaborative filtering.
+        Creates network effects: the more developers use this, the better recommendations become.
+      operationId: get_similar_products
+      parameters:
+        - name: product_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: The product_id from an AdResponse to find similar products for
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 5
+            minimum: 1
+            maximum: 10
+      responses:
+        '200':
+          description: Similar products
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/AdResponse'
+                  metadata:
+                    type: object
+                    properties:
+                      similarity_scores:
+                        type: array
+                        items:
+                          type: number
+                          format: float
+        '404':
+          description: Ad not found
+          $ref: '#/components/responses/NotFoundError'
+        '401':
+          description: Unauthorized
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /feedback:
+    post:
+      tags:
+        - Attribution
+      summary: Submit Relevance Feedback
+      description: >
+        Allows developers to report whether ads were relevant or not. Creates a data moat:
+        feedback improves the ranking model over time, making the service better for everyone.
+        This is a key competitive advantage that competitors can't easily replicate.
+      operationId: submit_feedback
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - request_id
+                - product_id
+                - relevant
+              properties:
+                request_id:
+                  type: string
+                  format: uuid
+                  description: The request_id from the search response
+                product_id:
+                  type: string
+                  format: uuid
+                  description: The product_id from the AdResponse that was shown
+                relevant:
+                  type: boolean
+                  description: Whether the ad was relevant to the user's intent
+                reason:
+                  type: string
+                  description: Optional explanation for why it was/wasn't relevant
+                  example: "User was looking for budget options, but this was too expensive"
+                user_clicked:
+                  type: boolean
+                  description: Whether the user clicked on the ad
+      responses:
+        '201':
+          description: Feedback recorded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  feedback_id:
+                    type: string
+                    format: uuid
+                  message:
+                    type: string
+                    example: "Thank you for your feedback. This helps improve our recommendations."
+        '400':
+          description: Bad Request
+          $ref: '#/components/responses/BadRequestError'
+        '401':
+          description: Unauthorized
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /clicks/{impression_id}:
+    post:
+      tags:
+        - Attribution
+      summary: Track Ad Click
+      description: >
+        Records a click event for attribution tracking. Required for Skimlinks/Amazon compliance.
+        Simplified: only requires impression_id in the path. The impression_id uniquely identifies
+        the product impression, making additional body parameters unnecessary. Clean, simple, and impossible to mess up.
+      operationId: track_click
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: impression_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: The impression_id from the AdResponse. Required for precise attribution tracking.
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                request_id:
+                  type: string
+                  format: uuid
+                  description: Optional. The request_id from the original search response (for reference)
+                user_agent:
+                  type: string
+                  description: Optional user agent string for analytics
+                conversion_value:
+                  type: number
+                  format: float
+                  description: Optional conversion value if purchase occurred
+      responses:
+        '201':
+          description: Click tracked successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClickTracking'
+        '400':
+          description: Bad Request
+          $ref: '#/components/responses/BadRequestError'
+        '401':
+          description: Unauthorized
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          description: Impression ID not found
+          $ref: '#/components/responses/NotFoundError'
+
+  /sessions:
+    get:
+      tags:
+        - Developer Portal
+      summary: List Active Sessions
+      description: >
+        Returns active conversation sessions for analytics. Helps developers understand
+        user engagement patterns and optimize their agent's ad injection strategy.
+      operationId: list_sessions
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 50
+            maximum: 100
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+      responses:
+        '200':
+          description: List of sessions
+          headers:
+            Link:
+              description: >
+                Standard HTTP Link header for pagination. Contains `rel="next"`, `rel="prev"`, 
+                `rel="first"`, and `rel="last"` links when applicable. Follows RFC 5988.
+              schema:
+                type: string
+                example: '<https://api.ad-tokens.com/sessions?limit=50&offset=50>; rel="next", <https://api.ad-tokens.com/sessions?limit=50&offset=0>; rel="first"'
+            X-Total-Count:
+              description: Total number of sessions available
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    session_id:
+                      type: string
+                      format: uuid
+                    created_at:
+                      type: string
+                      format: date-time
+                    last_activity_at:
+                      type: string
+                      format: date-time
+                    total_searches:
+                      type: integer
+                    total_clicks:
+                      type: integer
+                    conversion_rate:
+                      type: number
+                      format: float
+        '401':
+          description: Unauthorized
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /webhooks:
+    get:
+      tags:
+        - Developer Portal
+      summary: List Webhooks
+      description: >
+        Returns all webhooks configured for the authenticated user. Webhooks enable
+        real-time notifications for clicks, conversions, and other events.
+      operationId: list_webhooks
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: List of webhooks
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Webhook'
+        '401':
+          description: Unauthorized
+          $ref: '#/components/responses/UnauthorizedError'
+
+    post:
+      tags:
+        - Developer Portal
+      summary: Create Webhook
+      description: >
+        Creates a webhook for real-time event notifications. Enterprise-grade feature
+        that makes integration easier for high-volume developers.
+      operationId: create_webhook
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - url
+                - events
+              properties:
+                url:
+                  type: string
+                  format: uri
+                  description: The URL to send webhook events to
+                  example: "https://myapp.com/webhooks/ad-tokens"
+                events:
+                  type: array
+                  items:
+                    type: string
+                    enum: [click, conversion, search, feedback]
+                  description: Events to subscribe to
+                secret:
+                  type: string
+                  description: Optional secret for webhook signature verification
+      responses:
+        '201':
+          description: Webhook created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Webhook'
+        '400':
+          description: Bad Request
+          $ref: '#/components/responses/BadRequestError'
+        '401':
+          description: Unauthorized
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /webhooks/{webhook_id}:
+    delete:
+      tags:
+        - Developer Portal
+      summary: Delete Webhook
+      description: Removes a webhook configuration
+      operationId: delete_webhook
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: webhook_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Webhook deleted
+        '401':
+          description: Unauthorized
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          description: Webhook not found
+          $ref: '#/components/responses/NotFoundError'
+
+  /analytics:
+    get:
+      tags:
+        - Developer Portal
+      summary: Get Analytics
+      description: >
+        Programmatic access to analytics data. Returns click-through rates, conversion rates,
+        top-performing products, and more. Enables developers to build custom dashboards.
+      operationId: get_analytics
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: start_date
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: end_date
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: metric
+          in: query
+          schema:
+            type: string
+            enum: [ctr, conversion_rate, revenue, top_products, top_queries]
+          description: Specific metric to retrieve
+      responses:
+        '200':
+          description: Analytics data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Analytics'
+        '401':
+          description: Unauthorized
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /dashboard/stats:
+    get:
+      tags:
+        - Developer Portal
+      summary: Get Dashboard Overview Statistics
+      description: >
+        Returns dashboard overview statistics including total revenue, active API keys,
+        and ad requests in the last 24 hours. Used for the main dashboard page.
+      operationId: get_dashboard_stats
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Dashboard statistics
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DashboardStats'
+        '401':
+          description: Unauthorized
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /analytics/performance:
+    get:
+      tags:
+        - Developer Portal
+      summary: Get Performance Metrics
+      description: >
+        Returns performance metrics including request volume time-series, response time percentiles,
+        and HTTP status code breakdown. Used for analytics charts and performance monitoring.
+      operationId: get_performance_metrics
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: start_date
+          in: query
+          schema:
+            type: string
+            format: date-time
+          description: Start of the time period (ISO 8601). Defaults based on timeframe.
+        - name: end_date
+          in: query
+          schema:
+            type: string
+            format: date-time
+          description: End of the time period (ISO 8601). Defaults to now.
+        - name: timeframe
+          in: query
+          schema:
+            type: string
+            enum: [1h, 24h, 7d, 30d]
+            default: 24h
+          description: Timeframe identifier. Determines time bucket size for request volume.
+      responses:
+        '200':
+          description: Performance metrics
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PerformanceMetrics'
+        '401':
+          description: Unauthorized
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /logs:
+    get:
+      tags:
+        - Developer Portal
+      summary: Get API Logs
+      description: >
+        Returns paginated API logs from search requests. Supports filtering by date range,
+        status code, query text, and API key. Used for debugging and monitoring API usage.
+      operationId: get_api_logs
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: start_date
+          in: query
+          schema:
+            type: string
+            format: date-time
+          description: Start of the time period (ISO 8601). Optional.
+        - name: end_date
+          in: query
+          schema:
+            type: string
+            format: date-time
+          description: End of the time period (ISO 8601). Optional.
+        - name: status_code
+          in: query
+          schema:
+            type: integer
+          description: Filter by specific HTTP status code (e.g., 200, 404, 500)
+        - name: method
+          in: query
+          schema:
+            type: string
+            enum: [GET, POST, PUT, DELETE, PATCH, OPTIONS, HEAD]
+          description: Filter by HTTP method
+        - name: endpoint
+          in: query
+          schema:
+            type: string
+          description: Filter by endpoint path (case-insensitive partial match)
+        - name: api_key_id
+          in: query
+          schema:
+            type: string
+            format: uuid
+          description: Filter by specific API key ID
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 50
+            minimum: 1
+            maximum: 200
+          description: Maximum number of logs to return per page
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+            minimum: 0
+          description: Number of logs to skip for pagination
+      responses:
+        '200':
+          description: API logs response
+          headers:
+            X-Total-Count:
+              description: Total number of logs matching the filters
+              schema:
+                type: integer
+            Link:
+              description: RFC 5988 Link header for pagination
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiLogsResponse'
+        '400':
+          description: Bad Request - Invalid filter parameters
+          $ref: '#/components/responses/BadRequestError'
+        '401':
+          description: Unauthorized
+          $ref: '#/components/responses/UnauthorizedError'
+
+responses:
+  BadRequestError:
+    description: Bad Request - Invalid input parameters
+    content:
+      application/json:
+        schema:
+          $ref: '#/components/schemas/Error'
+        example:
+          code: "INVALID_INPUT"
+          message: "The 'query' field is required and cannot be empty."
+
+  UnauthorizedError:
+    description: API Key is missing or invalid
+    content:
+      application/json:
+        schema:
+          $ref: '#/components/schemas/Error'
+        example:
+          code: "UNAUTHORIZED"
+          message: "Invalid or missing API key."
+
+  NotFoundError:
+    description: Resource not found
+    content:
+      application/json:
+        schema:
+          $ref: '#/components/schemas/Error'
+        example:
+          code: "NOT_FOUND"
+          message: "The requested resource was not found."
+
+  RateLimitError:
+    description: Rate limit exceeded
+    headers:
+      X-RateLimit-Limit:
+        description: The number of requests allowed per time window
+        schema:
+          type: integer
+      X-RateLimit-Remaining:
+        description: The number of requests remaining in the current time window
+        schema:
+          type: integer
+          example: 0
+      X-RateLimit-Reset:
+        description: Unix timestamp when the rate limit window resets
+        schema:
+          type: integer
+    content:
+      application/json:
+        schema:
+          $ref: '#/components/schemas/Error'
+        example:
+          code: "RATE_LIMIT_EXCEEDED"
+          message: "Rate limit exceeded. Please try again later."
+
+  InternalServerError:
+    description: Internal server error
+    content:
+      application/json:
+        schema:
+          $ref: '#/components/schemas/Error'
+        example:
+          code: "INTERNAL_ERROR"
+          message: "An internal server error occurred. Please try again later."
+
+  ServiceUnavailableError:
+    description: Service temporarily unavailable
+    content:
+      application/json:
+        schema:
+          $ref: '#/components/schemas/Error'
+        example:
+          code: "SERVICE_UNAVAILABLE"
+          message: "The service is temporarily unavailable. Please try again later."
